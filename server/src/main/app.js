@@ -43,7 +43,7 @@ wss.on("connection", (ws) => {
           const lines = chunk.toString().split("\n");
 
           lines?.filter((line) => !!line).forEach((line) => {
-            console.log(line);
+            
             const regexType =
               /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:,\s*)?)+)/;
             const typeMatch = line.match(regexType);
@@ -129,7 +129,7 @@ wss.on("connection", (ws) => {
           type: 'ExitFunction'
         });
 
-        // console.log(reducedEvents.map(JSON.stringify));
+        console.log('events: ', reducedEvents.map(JSON.stringify));
         ws.send(JSON.stringify(reducedEvents));
       });
 
