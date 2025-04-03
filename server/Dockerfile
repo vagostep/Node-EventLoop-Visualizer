@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22
 
 WORKDIR /app 
 
@@ -7,9 +7,11 @@ RUN npm install
 
 COPY src .
 
-COPY node/node.exe .
+RUN chmod +x /app/worker/worker.js
 
-ENV NODE_PATH="./node"
+COPY node/node /app/node/
+
+ENV NODE_PATH="node/node"
 
 EXPOSE 8090 
 

@@ -9,8 +9,8 @@ const { Transform } = require("node:stream");
 // Heroku provides a PORT env var that we have to use
 const port = process.env.PORT || 8090;
 const wss = new WebSocket.Server({ port });
-const nodePath = process.env.NODE_PATH || `${path.join(__dirname, "../../node")}/node`;
-// console.log("Running server on port:", port);
+const nodePath = process.env.NODE_PATH ? `${path.join(__dirname, "../", process.env.NODE_PATH)}` : `${path.join(__dirname, "../../node")}/node`;
+console.log("Running server on port:", port);
 
 const Messages = {
   RunCode: "RunCode",
@@ -24,11 +24,12 @@ wss.on("connection", (ws) => {
       let events = [];
       let stdOutput = [];
       let isFinished = false;
-
+      console.log('worker: ', `${path.join(__dirname, "../worker")}/worker.js`);
+      console.log('nodePath: ', nodePath);
       const activeChildProcess = spawn(
         nodePath,
         [
-          path.join(__dirname, "../worker", "worker.js"),
+          `${path.join(__dirname, "../worker")}/worker.js`,
           JSON.stringify(payload),
         ]
       );
