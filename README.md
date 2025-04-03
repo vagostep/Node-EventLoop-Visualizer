@@ -29,6 +29,7 @@ You need to compile the Node.js modified project. Then you need to copy the file
 ### Client
 
 ```
+cd client
 npm install
 npm run start
 ```
@@ -36,6 +37,7 @@ npm run start
 ### Server
 
 ```
+cd server
 npm install
 npm run start
 ```
