@@ -222,14 +222,14 @@ const AppRoot = ({
         <div>
           {visiblePanels.taskQueue && (
             <TaskQueue
-              title="Macro Tasks"
+              title="Macro Task Queue"
               tasks={tasks}
               onClickAbout={onShowTaskQueueDescription}
             />
           )}
           {visiblePanels.microtaskQueue && (
             <TaskQueue
-              title="Micro Tasks"
+              title="Micro Task Queue"
               tasks={microtasks}
               onClickAbout={onShowMicrotaskQueueDescription}
             />
