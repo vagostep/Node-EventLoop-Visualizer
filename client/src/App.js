@@ -335,10 +335,14 @@ class App extends Component {
 
     // Automatically move task functions into the call stack
     if (
-      ['DequeueMicrotask', 'BeforeTimeout'].includes(type) &&
+      ['DequeueMicrotask', 'DequeueTask'].includes(type) &&
       nextEvent.type === 'EnterFunction'
     ) {
       this.playNextEvent();
+    }
+
+    if (!nextEvent) {
+      this.transitionToEditMode();
     }
   };
 

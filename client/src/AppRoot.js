@@ -199,7 +199,6 @@ const AppRoot = ({
               onClickRun={onClickRun}
               onClickEdit={onClickEdit}
             />
-            <ShareButton code={code} />
           </div>
           <CodeEditor
             code={code}
