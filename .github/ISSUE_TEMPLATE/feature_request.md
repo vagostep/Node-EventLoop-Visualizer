@@ -1,10 +1,17 @@
+---
 name: Feature request
-about: Describe what code do you want to see available for test
-title: [REQUEST] title
-labels: feature
+about: Suggest a general idea for this project
+title: "[Feature]"
+labels: enhancement
+assignees: ''
 
-** Add a code example **
-Paste an example of what feature do you want to be supported
+---
 
-** Add a motivation **
-What is the motivation for this feature?
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+
+**Describe the solution you'd like**
+A clear and concise description of what you want to happen.
+
+**Additional context**
+Add any other context or screenshots about the feature request here.
