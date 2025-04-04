@@ -17,12 +17,11 @@ This Event Loop Visualizer shows the phases that an Event Loop makes when execut
 
 # Dependencies 
 
-* The repo for the backend service is [here](https://github.com/vagostep/Node-EventLoop-Visualizer-Server).
 * The repo for the Node.js modified source code is [here](https://github.com/vagostep/Node-EventLoop-Visualizer-Node)
 
 ## How to set up node?
 
-You need to compile the Node.js modified project. Then you need to copy the file `/out/Release/node` to `server/node/node` 
+You need to compile the Node.js modified project. Then you need to copy the file from `/out/Release/node` to `server/node/node` 
 
 # How to run it?
 
