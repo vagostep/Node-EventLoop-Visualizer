@@ -12,8 +12,11 @@ const app = express();
 app.use(express.json()); 
 
 const corsOptions = {
-  origin: ["http://localhost:3000"],
-  methods: ["POST"], 
+  origin: [
+    "http://localhost:3000",
+    "https://vagostep.github.io/Node-EventLoop-Visualizer/",
+  ],
+  methods: ["POST"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
