@@ -8,7 +8,7 @@ const URL = process.env.NODE_ENV === 'production'
 
 const HTTP_URL =
   process.env.NODE_ENV === "production"
-    ? "http://node-eventloop-visualizer-server.onrender.com"
+    ? "https://node-eventloop-visualizer-server.onrender.com"
     : "http://localhost:8090";
 
 export const sendCode = (code: string) => {
