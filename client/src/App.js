@@ -8,7 +8,7 @@ import DEFAULT_CODE from './assets/defaultCode';
 //       that is currently published to NPM doesn't provide the `closeSnackbar`
 //       prop (which we need).
 import { SnackbarProvider, withSnackbar } from './notistack';
-import { fetchEventsForCode } from './utils/events';
+import { fetchEventsForCode, sendCode } from './utils/events';
 
 const pause = (millis) => new Promise((resolve) => setTimeout(resolve, millis));
 
@@ -169,9 +169,11 @@ class App extends Component {
     });
 
     try {
-      const events = await fetchEventsForCode(code);
+      // const events = await fetchEventsForCode(code);
+      const { data } = await sendCode(code);
+      console.log("Events:", data);
       this.currEventIdx = 0;
-      this.events = events;
+      this.events = data;
       this.setState({ mode: 'visualizing' });
     } catch (e) {
       this.currEventIdx = 0;
