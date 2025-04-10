@@ -11,7 +11,7 @@ const HTTP_URL =
     ? "http://node-eventloop-visualizer-server.onrender.com"
     : "http://localhost:8090";
 
-export const sendCode = (code) => {
+export const sendCode = (code: string) => {
   const body = { type: "RunCode", payload: code };
   return axios.post(`${HTTP_URL}/execute-code`, body);
 }
