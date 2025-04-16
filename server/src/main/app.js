@@ -276,8 +276,9 @@ function processRequest(req) {
           type: "ExitFunction",
         });
 
-        console.log("events: ", reducedEvents.map(JSON.stringify));
-        resolve(reducedEvents);
+        console.log("events: ", reducedEvents.map(JSON.stringify));        
+        const finalEvents = reduceEventLoopCycles(reducedEvents);
+        resolve(finalEvents);
       });
     } else {
       console.error("Unknown message type:", type);
@@ -290,3 +291,39 @@ function processRequest(req) {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+const reduceEventLoopCycles = (reduceEvents) => {
+  const finalEvents = [];
+  const targetSequence = [
+    "EventLoopPoll",
+    "EventLoopPendingCallbacks",
+    "EventLoopCheck",
+    "EventLoopCloseCallbacks",
+    "EventLoopTimers",
+    "EventLoopPendingCallbacks",
+    "EventLoopIdlePrepare",
+  ];
+
+  const allowedCycles = 1;
+  let completeCycles = 1;
+  let i = 0;
+  while (i < reduceEvents.length) {
+    const slice = reduceEvents.slice(i, i + 7);
+    const events = slice.map((obj) => obj.type);
+    if (events.join() === targetSequence.join()) {
+      if (completeCycles > allowedCycles) {
+        i += 7;
+        continue;
+      }
+      finalEvents.push(...slice);
+      completeCycles++;
+    } else {
+      completeCycles = 1;
+      finalEvents.push(reduceEvents[i]);
+      i++;
+    }
+
+  }
+
+  return finalEvents;
+}

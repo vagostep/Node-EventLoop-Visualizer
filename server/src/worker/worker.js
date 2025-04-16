@@ -64,6 +64,7 @@ const context = {
     nextTick: process.nextTick,
   },
   fetch,
+  JSON,
 };
 
 const code = process.argv.slice(2)?.[0];
