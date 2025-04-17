@@ -11,21 +11,38 @@ import { AiOutlineSend } from "react-icons/ai";
 import ActionButtons from '@components/ActionButtons';
 import { useState } from 'react';
 import axios from "axios";
+import { HiOutlineCode } from 'react-icons/hi';
+
+const API_URL = "http://localhost:8090";
+
 
 function App() {
 
   const [code, setCode] = useState('console.log("2");');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const onChangeCode = (newCode: string) => {
     setCode(newCode);
   }
 
+  const onButtonEditClick = () => {
+    setIsEditMode(false);
+  }
+
   const onButtonRunClick = async () => {
+    
     try {
-      const response = await axios.get("https://api.ejemplo.com/endpoint");
+      setIsLoading(true);
+      const body = { type: "RunCode", payload: code };
+      const response = await axios.post(`${API_URL}/execute-code`, body);
       console.log("Respuesta:", response.data);
+      setIsEditMode(true);
     } catch (error) {
       console.error("Error:", error);
+      setIsEditMode(false);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -51,10 +68,36 @@ function App() {
           <Box width="100%">
             <Flex justifyContent="space-between">
               <ExampleSelector></ExampleSelector>
-              <Button size="lg" variant="surface" bg="blue" borderRadius="0px" shadow="sm" onClick={onButtonRunClick}>
-                <AiOutlineSend />
-                Run
-              </Button>
+              {isEditMode ? (
+                <Button
+                  size="lg"
+                  variant="surface"
+                  bg="gray"
+                  borderRadius="0px"
+                  shadow="sm"
+                  onClick={onButtonEditClick}
+                  width="26%"
+                >
+                  <HiOutlineCode />
+                  Edit
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  variant="surface"
+                  bg="blue"
+                  borderRadius="0px"
+                  shadow="sm"
+                  onClick={onButtonRunClick}
+                  loading={isLoading}
+                  loadingText="Run"
+                  spinnerPlacement="start"
+                  width="26%"
+                >
+                  <AiOutlineSend />
+                  Run
+                </Button>
+              )}
             </Flex>
           </Box>
           <Box display="flex" alignItems="center" width="100%">

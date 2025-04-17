@@ -11,7 +11,13 @@ const examples = createListCollection({
 
 const ExampleSelector: React.FC = () => {
   return (
-    <Select.Root collection={examples} size="sm" width="75%" shadow="sm">
+    <Select.Root
+      collection={examples}
+      size="sm"
+      width="71%"
+      shadow="sm"
+      borderRadius="0px"
+    >
       <Select.HiddenSelect />
       <Select.Control>
         <Select.Trigger>
