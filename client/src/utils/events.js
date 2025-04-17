@@ -1,9 +1,21 @@
 /* @flow */
 import _ from 'lodash';
+import axios from "axios";
 
 const URL = process.env.NODE_ENV === 'production'
   ? 'wss://node-eventloop-visualizer-server.onrender.com'
   : 'ws://localhost:8090';
+
+const HTTP_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://node-eventloop-visualizer-server.onrender.com"
+    : "http://localhost:8090";
+
+export const sendCode = (code: string) => {
+  const body = { type: "RunCode", payload: code };
+  return axios.post(`${HTTP_URL}/execute-code`, body);
+}
+
 export const fetchEventsForCode = (code: string) =>
   new Promise((resolve, reject) => {
     try {
