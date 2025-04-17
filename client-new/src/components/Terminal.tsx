@@ -44,10 +44,13 @@ const TerminalContainer = styled.div`
   background-color: #772953;
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  height: 96%;
   border-radius: 8px;
   font-family: monospace;
   overflow-y: auto;
+  box-shadow: 0px 2px 4px color-mix(in srgb, black 64%, transparent),
+    0px 0px 1px inset
+      color-mix(in srgb, var(--chakra-colors-gray-300) 30%, transparent);
 `;
 
 const TerminalSection = styled.div`
