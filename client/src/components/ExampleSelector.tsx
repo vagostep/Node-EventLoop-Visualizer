@@ -1,6 +1,6 @@
 import { Portal, Select, SelectValueChangeDetails, Separator, createListCollection } from "@chakra-ui/react";
 import { groupBy } from "es-toolkit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const examples = createListCollection({
   items: [
@@ -181,6 +181,13 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
     setValue(details.value);
     onValueChange(details?.value?.[0]);
   };
+
+  useEffect(() => {
+    if (examples.firstValue) {
+      setValue([examples.firstValue]);
+      onValueChange(examples.firstValue);
+    }
+  }, []);
 
   return (
     <Select.Root
