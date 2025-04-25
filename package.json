@@ -1,0 +1,10 @@
+{
+  "homepage": "https://vagostep.github.io/Node-EventLoop-Visualizer",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  },
+  "scripts": {
+    "deploy": "gh-pages -d client/dist",
+    "predeploy": "cd client/ && npm run build"
+  }
+}
