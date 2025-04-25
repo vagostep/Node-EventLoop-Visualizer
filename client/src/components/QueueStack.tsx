@@ -16,16 +16,18 @@ export interface Frame {
 export interface QueueStackProps {
   title: string;
   orientation: Orientation;
-  frames: Array<Frame>
+  frames: Array<Frame>;
+  onAboutClick: () => void;
 }
 
 const QueueStack: React.FC<QueueStackProps> = ({
   title,
   orientation,
   frames = [],
+  onAboutClick,
 }) => {
-  const flexDirection = (orientation === "horizontal") ? "row" : "column-reverse";
-  const width = (orientation === "horizontal") ? "auto" : "100%";
+  const flexDirection = orientation === "horizontal" ? "row" : "column-reverse";
+  const width = orientation === "horizontal" ? "auto" : "100%";
   const initial =
     orientation === "horizontal"
       ? { opacity: 0, x: 200 }
@@ -46,7 +48,21 @@ const QueueStack: React.FC<QueueStackProps> = ({
           fontSize="20px"
           marginBottom="1rem"
         >
-          <Text fontSize="1.3rem">{title}</Text>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Text textStyle="xl">{title}</Text>
+            <Text
+              textStyle="xs"
+              color="#339933"
+              _hover={{
+                color: "#66cc33",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+              onClick={onAboutClick}
+            >
+              About
+            </Text>
+          </Flex>
         </Card.Title>
         <Flex flexDirection={flexDirection} height="100%" gap="12px">
           <AnimatePresence>

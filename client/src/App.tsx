@@ -12,6 +12,12 @@ import axios from "axios";
 import CodeEditorButtons from '@components/CodeEditorButtons';
 import { API_URL, COMMANDS, defaultCode } from './constants';
 import { EventRequest, EventResponse, Event, Marker } from './interfaces';
+import WelcomeDialog from '@components/WelcomeDialog';
+import CallStackAboutDialog from '@components/CallStackAboutDialog';
+import MicroTaskQueueAboutDialog from '@components/MicroTaskQueueAboutDialog';
+import MacroTaskQueueAboutDialog from '@components/MacroTaskQueueAboutDialog';
+import EventLoopStepperAboutDialog from '@components/EventLoopStepperAboutDialog';
+import TicksAndRejectionsLoopStepperAboutDialog from '@components/TicksAndRejectionsLoopStepperAboutDialog';
 
 const eventLoopSteps: Array<Step> = [
   {
@@ -127,11 +133,37 @@ function App() {
   const [eventLoopActiveStep, setEventLoopActiveStep] = useState<string>("none");
   const [ticksAndRejectionsActiveStep, setTicksAndRejectionsActiveStep] = useState<string>("none");
   const intervalRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const [isWelcomeDialogOpen, setIsWelcomeDialogOpen] = useState(false);
+  const [isCallStackAboutDialogOpen, setIsCallStackAboutDialogOpen] = useState(false);
+  const [isMicrotaskQueueAboutDialogOpen, setIsMicrotaskQueueAboutDialogOpen] =
+    useState(false);
+  const [isMacrotaskQueueAboutDialogOpen, setIsMacrotaskQueueAboutDialogOpen] =
+    useState(false);
+  const [
+    isEventLoopStepperAboutDialogOpen,
+    setIsEventLoopStepperAboutDialogOpen,
+  ] = useState(false);
+  const [
+    isTicksAndRejectionsStepperAboutDialogOpen,
+    setIsTicksAndRejectionsStepperAboutDialogOpen,
+  ] = useState(false);
 
   useEffect(() => {
     callStackRef.current = callStack;
     markersRef.current = markers;
   }, [callStack, markers]);
+
+  useEffect(() => {
+    const hideDialog = localStorage.getItem("hideWelcomeDialog");
+
+    if (hideDialog !== "true") {
+      setIsWelcomeDialogOpen(true);
+    }
+  }, []);
+
+  const onWelcomeDialogChecked = (checked: boolean) => {
+    localStorage.setItem("hideWelcomeDialog", `${checked}`);
+  };
 
   function* eventsIterator(eventsArray: Array<EventResponse>) {
     for (const event of eventsArray) {
@@ -161,6 +193,8 @@ function App() {
     setIsAutoPlay(false);
     setOutputs([]);
     setMarkers([]);
+    setIsWelcomeDialogOpen(false);
+    setIsCallStackAboutDialogOpen(false);
     if (isAutoPlay) {
       setIsAutoPlay(false);
       clearInterval(intervalRef.current);
@@ -312,8 +346,72 @@ function App() {
     }
   }
 
+  const onAboutClick = (name: string) => {
+
+    switch (name) {
+      case "callstack":
+        setIsCallStackAboutDialogOpen(true);
+        break;
+      case "microtaskqueue":
+        setIsMicrotaskQueueAboutDialogOpen(true);
+        break;
+      case "macrotaskqueue":
+        setIsMacrotaskQueueAboutDialogOpen(true);
+        break;
+      case "eventloop":
+        setIsEventLoopStepperAboutDialogOpen(true);
+        break;
+      case "ticksandrejectionsloop":
+        setIsTicksAndRejectionsStepperAboutDialogOpen(true);
+        break
+      default:
+        break;
+    }
+  };
+
   return (
     <Container padding="16px">
+      {isWelcomeDialogOpen && (
+        <WelcomeDialog
+          onWelcomeDialogChecked={onWelcomeDialogChecked}
+          onWelcomeDialogClose={() => setIsWelcomeDialogOpen(false)}
+        ></WelcomeDialog>
+      )}
+      {isCallStackAboutDialogOpen && (
+        <CallStackAboutDialog
+          onCallStackAboutDialogClose={() =>
+            setIsCallStackAboutDialogOpen(false)
+          }
+        ></CallStackAboutDialog>
+      )}
+      {isMicrotaskQueueAboutDialogOpen && (
+        <MicroTaskQueueAboutDialog
+          onMicroTaskQueueAboutDialogClose={() => {
+            setIsMicrotaskQueueAboutDialogOpen(false);
+          }}
+        ></MicroTaskQueueAboutDialog>
+      )}
+      {isMacrotaskQueueAboutDialogOpen && (
+        <MacroTaskQueueAboutDialog
+          onMacroTaskQueueAboutDialogClose={() => {
+            setIsMacrotaskQueueAboutDialogOpen(false);
+          }}
+        ></MacroTaskQueueAboutDialog>
+      )}
+      {isEventLoopStepperAboutDialogOpen && (
+        <EventLoopStepperAboutDialog
+          onEventLoopStepperAboutDialogClose={() => {
+            setIsEventLoopStepperAboutDialogOpen(false);
+          }}
+        ></EventLoopStepperAboutDialog>
+      )}
+      {isTicksAndRejectionsStepperAboutDialogOpen && (
+        <TicksAndRejectionsLoopStepperAboutDialog
+          onTicksAndRejectionsLoopStepperAboutDialogClose={() => {
+            setIsTicksAndRejectionsStepperAboutDialogOpen(false);
+          }}
+        ></TicksAndRejectionsLoopStepperAboutDialog>
+      )}
       <Grid templateColumns="35% 65%" templateRows="1fr" height="92vh" gap={4}>
         <GridItem
           colSpan={1}
@@ -323,7 +421,7 @@ function App() {
         >
           <Box width="100%" padding="16px">
             <Flex justifyContent="space-around">
-              <Image src="light.svg" height="50px" width="80px" />
+              <Image src="/light.svg" height="50px" width="80px" />
               <Text textStyle="2xl" textAlign="center">
                 Event Loop Visualizer
               </Text>
@@ -358,12 +456,7 @@ function App() {
             ></Terminal>
           </Box>
         </GridItem>
-        <GridItem
-          colSpan={1}
-          display="grid"
-          gridTemplateRows="30% 68%"
-          gap={4}
-        >
+        <GridItem colSpan={1} display="grid" gridTemplateRows="30% 68%" gap={4}>
           <Box width="100%">
             <Flex direction="column" height="100%" gap={4}>
               <Box width="94.5%" height="100%">
@@ -371,6 +464,7 @@ function App() {
                   orientation="horizontal"
                   title="Macrotask Queue"
                   frames={macroTasks}
+                  onAboutClick={() => onAboutClick("macrotaskqueue")}
                 ></QueueStack>
               </Box>
               <Box width="94.5%" height="100%">
@@ -378,6 +472,7 @@ function App() {
                   orientation="horizontal"
                   title="Microtask Queue"
                   frames={microTasks}
+                  onAboutClick={() => onAboutClick("microtaskqueue")}
                 ></QueueStack>
               </Box>
             </Flex>
@@ -389,6 +484,7 @@ function App() {
                   orientation="vertical"
                   title="Call Stack"
                   frames={callStack}
+                  onAboutClick={() => onAboutClick("callstack")}
                 ></QueueStack>
               </Box>
               <Box width="30%" height="100%" maxHeight="65vh">
@@ -396,6 +492,7 @@ function App() {
                   title="Event Loop"
                   steps={eventLoopSteps}
                   activeStep={eventLoopActiveStep}
+                  onAboutClick={() => onAboutClick("eventloop")}
                 ></Stepper>
               </Box>
               <Box width="30%" height="100%" maxHeight="65vh">
@@ -403,6 +500,7 @@ function App() {
                   title="Ticks & Rejections"
                   steps={ticksAndRejectionsSteps}
                   activeStep={ticksAndRejectionsActiveStep}
+                  onAboutClick={() => onAboutClick("ticksandrejectionsloop")}
                 ></Stepper>
               </Box>
             </Flex>

@@ -8,7 +8,7 @@ const Attributions: React.FC = () => {
         color="#339933"
         _hover={{ color: "#66cc33", textDecoration: "none" }}
         target="_blank"
-        href="https://github.com/vagostep"
+        href="https://github.com/vagostep/Node-EventLoop-Visualizer"
       >
         vagostep
       </Link>{" "}
