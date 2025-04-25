@@ -84,7 +84,10 @@ const eventsReducer = (state, evt) => {
     // state.events.push({ type: 'DequeueTask', payload: evt.payload });
   }
 
-  if (type?.startsWith('EventLoop') || type === 'NextTick' || type === 'MicroTasks'  || type === 'EndProcessTicksAndRejections') {
+  if (
+    type?.startsWith("EventLoop") ||
+    type?.startsWith("TicksAndRejections")
+  ) {
     state.events.push(evt);
   }
 
