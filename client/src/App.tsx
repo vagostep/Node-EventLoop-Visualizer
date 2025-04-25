@@ -323,7 +323,7 @@ function App() {
         >
           <Box width="100%" padding="16px">
             <Flex justifyContent="space-around">
-              <Image src="/light.svg" height="50px" width="80px" />
+              <Image src="light.svg" height="50px" width="80px" />
               <Text textStyle="2xl" textAlign="center">
                 Event Loop Visualizer
               </Text>
