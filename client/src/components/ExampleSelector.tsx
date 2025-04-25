@@ -146,7 +146,7 @@ process.nextTick(function nextTick1() {
 process.nextTick(function nextTick2() {
   console.log('this is process.nextTick 2');
   process.nextTick(
-    console.log.bind(console, 'this is the inner next tick inside next tick')
+    console.log('this is the inner next tick inside next tick')
   );
 });
 `.trim(),
