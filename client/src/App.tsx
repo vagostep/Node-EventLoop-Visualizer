@@ -126,7 +126,7 @@ function App() {
   const [events, setEvents] = useState<Generator<Event>>();
   const [eventLoopActiveStep, setEventLoopActiveStep] = useState<string>("none");
   const [ticksAndRejectionsActiveStep, setTicksAndRejectionsActiveStep] = useState<string>("none");
-  const intervalRef = useRef<number>(undefined);
+  const intervalRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     callStackRef.current = callStack;
@@ -323,9 +323,9 @@ function App() {
         >
           <Box width="100%" padding="16px">
             <Flex justifyContent="space-around">
-              <Image src="light.svg" height="50px" width="80px" />
+              <Image src="/light.svg" height="50px" width="80px" />
               <Text textStyle="2xl" textAlign="center">
-                EventLoop Visualizer
+                Event Loop Visualizer
               </Text>
             </Flex>
           </Box>
