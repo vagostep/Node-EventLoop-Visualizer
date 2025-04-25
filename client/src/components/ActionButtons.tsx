@@ -22,7 +22,8 @@ const ActionButtons: FC<ActionButtonsProps> = ({
           shadow="sm"
           variant="surface"
           onClick={() =>
-            isAutoPlay ? onAutoplayNextEvent(false) : onAutoplayNextEvent(true) }
+            isAutoPlay ? onAutoplayNextEvent(false) : onAutoplayNextEvent(true)
+          }
           aria-description="Auto play"
           _hover={
             isAutoPlay
@@ -50,6 +51,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({
           width="140px"
           size="lg"
           shadow="sm"
+          disabled={isAutoPlay}
           variant="surface"
           onClick={onPlayNextEvent}
           _hover={{
