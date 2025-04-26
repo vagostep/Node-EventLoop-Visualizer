@@ -421,9 +421,13 @@ function App() {
         >
           <Box width="100%" padding="16px">
             <Flex justifyContent="space-around">
-              <Image src="/light.svg" height="50px" width="80px" />
+              <Image
+                src={`${import.meta.env.VITE_BASE_URL}/light.svg`}
+                height="50px"
+                width="80px"
+              />
               <Text textStyle="2xl" textAlign="center">
-                Event Loop Visualizer
+                Event Loop Visualizer{" "}
               </Text>
             </Flex>
           </Box>
