@@ -30,7 +30,7 @@ You need to compile the Node.js modified project. Then you need to copy the file
 ```
 cd client
 npm install
-npm run start
+npm run dev
 ```
 
 ### Server
@@ -52,6 +52,7 @@ npm run start
 * setInterval() (You need to add a clearInterval() at some point to spot the execution)
 * fs.readFile()
 * setImmediate()
+* async/await
 
 # Issues
 
