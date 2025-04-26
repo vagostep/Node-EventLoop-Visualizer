@@ -38,6 +38,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
       : { opacity: 0, y: -200 };
   const animate =
     orientation === "horizontal" ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 };
+  const titleMarginBottom = orientation === "horizontal" ? "10px" : "3rem";
 
   return (
     <Card.Root height="100%" width="100%" bg="#333333" shadow="sm">
@@ -46,7 +47,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
           color="#fff"
           fontWeight="bold"
           fontSize="20px"
-          marginBottom="1rem"
+          marginBottom={titleMarginBottom}
         >
           <Flex justifyContent="space-between" alignItems="center">
             <Text textStyle="xl">{title}</Text>
