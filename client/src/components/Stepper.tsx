@@ -1,4 +1,4 @@
-import { Card, Steps, Text } from "@chakra-ui/react";
+import { Card, Flex, Steps, Text } from "@chakra-ui/react";
 import React from "react";
 import { LuCheck } from "react-icons/lu";
 
@@ -12,9 +12,10 @@ export interface StepperProps {
   title: string;
   steps: Array<Step>;
   activeStep: string;
+  onAboutClick: () => void;
 }
 
-const Stepper: React.FC<StepperProps> = ({ title, activeStep, steps = [] }) => {
+const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, steps = [] }) => {
 
   const getIndicatorBackgroundColor = (index: number) => {
     const activeStepId = steps?.find((step) => step.name === activeStep)?.id || 0;
@@ -35,7 +36,21 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, steps = [] }) => {
     <Card.Root height="100%" width="100%" bg="#333333" shadow="sm">
       <Card.Body padding="1rem">
         <Card.Title color="#fff" fontWeight="bold" fontSize="20px">
-          <Text fontSize="1.3rem">{title}</Text>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Text textStyle="xl">{title}</Text>
+            <Text
+              textStyle="xs"
+              color="#339933"
+              _hover={{
+                color: "#66cc33",
+                textDecoration: "none",
+                cursor: "pointer",
+              }}
+              onClick={onAboutClick}
+            >
+              About
+            </Text>
+          </Flex>
         </Card.Title>
         <Steps.Root
           orientation="vertical"
