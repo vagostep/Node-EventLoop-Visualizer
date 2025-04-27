@@ -68,7 +68,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
             </Text>
           </Flex>
         </Card.Title>
-        <Flex flexDirection={flexDirection} height="100%" gap="12px">
+        <Flex flexDirection={flexDirection} height="100%" gap="12px" width="100%">
           <AnimatePresence>
             {frames?.map(({ name }, index) => {
               return (

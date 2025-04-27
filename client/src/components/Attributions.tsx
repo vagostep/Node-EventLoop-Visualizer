@@ -2,7 +2,7 @@ import { Link, Text } from "@chakra-ui/react";
 
 const Attributions: React.FC = () => {
   return (
-    <Text textStyle={{ base: "md", md: "2xl" }} marginTop="8px">
+    <Text textStyle={{ base: "md", md: "sm" }} marginTop="8px">
       By{" "}
       <Link
         color="#339933"
@@ -10,7 +10,7 @@ const Attributions: React.FC = () => {
         target="_blank"
         href="https://github.com/vagostep/Node-EventLoop-Visualizer"
       >
-        vagostep
+        Vagostep
       </Link>{" "}
       based on work from{" "}
       <Link

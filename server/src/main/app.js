@@ -45,9 +45,7 @@ function processRequest(req) {
     if (type === Messages.RunCode) {
       let events = [];
       let stdOutput = [];
-      let isFinished = false;
-      console.log("worker: ", `${path.join(__dirname, "../worker")}/worker.js`);
-      console.log("nodePath: ", nodePath);
+
       const activeChildProcess = spawn(nodePath, [
         `${path.join(__dirname, "../worker")}/worker.js`,
         JSON.stringify(payload),
@@ -121,6 +119,7 @@ function processRequest(req) {
 
       activeChildProcess.stderr.on("data", (data) => {
         // console.log("STDERR: ", data.toString());
+        reject(data.toString());
       });
 
       activeChildProcess.on("close", () => {

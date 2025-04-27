@@ -18,6 +18,7 @@ import MicroTaskQueueAboutDialog from '@components/MicroTaskQueueAboutDialog';
 import MacroTaskQueueAboutDialog from '@components/MacroTaskQueueAboutDialog';
 import EventLoopStepperAboutDialog from '@components/EventLoopStepperAboutDialog';
 import TicksAndRejectionsLoopStepperAboutDialog from '@components/TicksAndRejectionsLoopStepperAboutDialog';
+import { Toaster, toaster } from "@components/ui/toaster";
 
 const eventLoopSteps: Array<Step> = [
   {
@@ -322,6 +323,15 @@ function App() {
         setTicksAndRejectionsActiveStep("TicksAndRejectionsCompleted");
         break;
       }
+      case "UncaughtError": {
+        toaster.create({
+          title: `${type}`,
+          description: `${funcId}`,
+          type: 'error',
+          duration: 3000
+        });
+        break;
+      }
       default:
         break;
     }
@@ -412,6 +422,7 @@ function App() {
           }}
         ></TicksAndRejectionsLoopStepperAboutDialog>
       )}
+      <Toaster />
       <Grid
         templateColumns={{ base: "1fr", sm: "35% 65%" }}
         templateRows={{ base: "100vh 100vh", sm: "1fr" }}
@@ -421,7 +432,10 @@ function App() {
         <GridItem
           colSpan={1}
           display="grid"
-          gridTemplateRows="8% 5% 46.5% 35%"
+          gridTemplateRows={{
+            base: "8% 6% 5% 41.5% 32%",
+            md: "6% 3% 5% 47% 32%",
+          }}
           gap={4}
         >
           <Box width="100%" padding="16px">
@@ -439,6 +453,10 @@ function App() {
                 Event Loop Visualizer{" "}
               </Text>
             </Flex>
+          </Box>
+
+          <Box>
+            <Attributions></Attributions>
           </Box>
           <Box width="100%">
             <Flex justifyContent="space-between">
@@ -505,7 +523,7 @@ function App() {
                 width={{ base: "100%", sm: "30%" }}
                 height="100%"
                 maxHeight={{ base: "100%", sm: "65vh" }}
-                minHeight={{ base: "14%", sm: "100%" }}
+                minHeight={{ base: "15%", sm: "100%" }}
               >
                 <QueueStack
                   orientation="vertical"
@@ -542,9 +560,6 @@ function App() {
           </Box>
         </GridItem>
       </Grid>
-      <Box>
-        <Attributions></Attributions>
-      </Box>
       {!isEditMode && !isLoading ? (
         <ActionButtons
           onPlayNextEvent={onPlayNextEvent}
