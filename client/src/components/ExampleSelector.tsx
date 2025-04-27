@@ -192,7 +192,7 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
   return (
     <Select.Root
       collection={examples}
-      size="sm"
+      size={{ base: "xs", md: "sm" }}
       width="71%"
       shadow="sm"
       borderRadius="0px"

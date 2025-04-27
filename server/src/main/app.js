@@ -1,8 +1,5 @@
-const WebSocket = require("ws");
-const { launchWorker } = require("./launchWorker");
 const { reduceEvents } = require("./eventsReducer");
 const path = require("node:path");
-const { processCode } = require("../worker/processCode");
 const { spawn } = require("node:child_process");
 const { Transform } = require("node:stream");
 const express = require('express');
@@ -69,14 +66,14 @@ function processRequest(req) {
             ?.filter((line) => !!line)
             ?.forEach((line) => {
               const regexType =
-                /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:,\s*)?)+)/;
+                /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:;\s*)?)+)/;
               const typeMatch = line.match(regexType);
-
+              console.log(typeMatch)
               if (typeMatch) {
                 let message, type, name, funcId, start, end;
 
                 let source = typeMatch[1];
-                const match = typeMatch[2]?.trim()?.split(",");
+                const match = typeMatch[2]?.trim()?.split(";");
 
                 if (source === "event") {
                   type = getTransformedMessageLine(match[0]);
@@ -152,7 +149,7 @@ function processRequest(req) {
           type: "ExitFunction",
         });
 
-        console.log("events: ", reducedEvents.map(JSON.stringify));        
+        // console.log("events: ", reducedEvents.map(JSON.stringify));        
         const finalEvents = reduceEventLoopCycles(reducedEvents);
         resolve(finalEvents);
       });

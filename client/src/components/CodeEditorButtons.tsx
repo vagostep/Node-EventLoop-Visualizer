@@ -20,7 +20,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
     <>
       {!isEditMode && !isLoading ? (
         <Button
-          size="lg"
+          size={{ base: "sm", md: "lg" }}
           variant="surface"
           bg="#e99c40"
           borderRadius="0px"
@@ -39,7 +39,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
         </Button>
       ) : (
         <Button
-          size="lg"
+          size={{ base: "sm", md: "lg" }}
           variant="surface"
           bg="#339933"
           borderRadius="0px"
