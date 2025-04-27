@@ -36,11 +36,12 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, step
     <Card.Root height="100%" width="100%" bg="#333333" shadow="sm">
       <Card.Body padding="1rem">
         <Card.Title color="#fff" fontWeight="bold" fontSize="20px">
-          <Flex justifyContent="space-between" alignItems="center">
-            <Text textStyle="xl">{title}</Text>
+          <Flex justifyContent="space-between">
+            <Text textStyle={{ base: "md", md: "xl" }}>{title}</Text>
             <Text
               textStyle="xs"
               color="#339933"
+              mt="8px"
               _hover={{
                 color: "#66cc33",
                 textDecoration: "none",

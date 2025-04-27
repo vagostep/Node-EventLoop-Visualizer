@@ -9,6 +9,8 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import { getPastelIndexFor } from '@utils/colors';
 import { useColorMode } from '@components/ui/color-mode';
 import { Marker } from '../interfaces';
+import { useBreakpointValue } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 interface CodeEditorProps {
   code: string;
@@ -50,6 +52,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   const { colorMode } = useColorMode();
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  useEffect(() => {
+
+  }, [isMobile])
 
   return (
     <>
@@ -66,7 +73,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             0px 0px 1px inset
             color-mix(in srgb, var(--chakra-colors-gray-300) 30%, transparent)`,
           borderRadius: "8px",
-          lineHeight: "16px",
+          lineHeight: !!isMobile ? "12px" : "16px",
         }}
         focus={true}
         markers={markers?.map(({ start, end }, idx) => ({
@@ -88,7 +95,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           showGutter: true,
           highlightGutterLine: isEditMode,
           highlightActiveLine: isEditMode,
-          fontSize: 14,
+          fontSize: !!isMobile ? 10 : 14,
           showPrintMargin: true,
           tabSize: 2,
           useWorker: false,

@@ -1,4 +1,4 @@
-import { Box, Card, Flex, Text } from "@chakra-ui/react";
+import { Box, Card, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { getPastelForIndex } from "@utils/colors";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -26,34 +26,37 @@ const QueueStack: React.FC<QueueStackProps> = ({
   frames = [],
   onAboutClick,
 }) => {
-  const flexDirection = orientation === "horizontal" ? "row" : "column-reverse";
-  const width = orientation === "horizontal" ? "auto" : "100%";
+  const isMobile = useBreakpointValue({ base: true, sm: false });
+
+  const isHorizontal = !!isMobile || orientation === "horizontal";
+  const flexDirection = isHorizontal ? "row" : "column-reverse";
+  const width = isHorizontal ? "auto" : "100%";
   const initial =
-    orientation === "horizontal"
+    isHorizontal
       ? { opacity: 0, x: 200 }
       : { opacity: 0, y: -200 };
   const exit =
-    orientation === "horizontal"
+    isHorizontal
       ? { opacity: 0, x: 200 }
       : { opacity: 0, y: -200 };
   const animate =
-    orientation === "horizontal" ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 };
-  const titleMarginBottom = orientation === "horizontal" ? "10px" : "3rem";
+    isHorizontal ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 };
+  const titleMarginBottom = isHorizontal ? "10px" : "3rem";
 
   return (
     <Card.Root height="100%" width="100%" bg="#333333" shadow="sm">
-      <Card.Body padding="1rem" overflow="hidden" height="100%">
+      <Card.Body padding="1rem" overflow="hidden" height="100%" width="100%">
         <Card.Title
           color="#fff"
           fontWeight="bold"
-          fontSize="20px"
           marginBottom={titleMarginBottom}
         >
-          <Flex justifyContent="space-between" alignItems="center">
-            <Text textStyle="xl">{title}</Text>
+          <Flex justifyContent="space-between">
+            <Text textStyle={{base: "md", md: "xl" }}>{title}</Text>
             <Text
               textStyle="xs"
               color="#339933"
+              mt="8px"
               _hover={{
                 color: "#66cc33",
                 textDecoration: "none",
@@ -85,7 +88,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
                   transition={{ duration: 0.5 }}
                 >
                   <Text
-                    fontSize="0.8rem"
+                    textStyle="md.8rem"
                     textAlign="center"
                     lineHeight="0.6"
                     textOverflow="ellipsis"

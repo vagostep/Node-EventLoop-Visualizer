@@ -412,7 +412,12 @@ function App() {
           }}
         ></TicksAndRejectionsLoopStepperAboutDialog>
       )}
-      <Grid templateColumns="35% 65%" templateRows="1fr" height="92vh" gap={4}>
+      <Grid
+        templateColumns={{ base: "1fr", sm: "35% 65%" }}
+        templateRows={{ base: "100vh 100vh", sm: "1fr" }}
+        height={{ base: "auto", sm: "92vh" }}
+        gap={4}
+      >
         <GridItem
           colSpan={1}
           display="grid"
@@ -420,13 +425,17 @@ function App() {
           gap={4}
         >
           <Box width="100%" padding="16px">
-            <Flex justifyContent="space-around">
+            <Flex
+              justifyContent={{ base: "flex-start", sm: "space-around" }}
+              alignItems="center"
+              gap={{ base: "4", sm: "0" }}
+            >
               <Image
                 src={`${import.meta.env.VITE_BASE_URL}/light.svg`}
                 height="50px"
                 width="80px"
               />
-              <Text textStyle="2xl" textAlign="center">
+              <Text textStyle={{ base: "xl", lg: "2xl" }} textAlign="center">
                 Event Loop Visualizer{" "}
               </Text>
             </Flex>
@@ -460,10 +469,15 @@ function App() {
             ></Terminal>
           </Box>
         </GridItem>
-        <GridItem colSpan={1} display="grid" gridTemplateRows="30% 68%" gap={4}>
+        <GridItem
+          colSpan={1}
+          display="grid"
+          gridTemplateRows={{ base: "30% 100%", sm: "30% 68%" }}
+          gap={4}
+        >
           <Box width="100%">
             <Flex direction="column" height="100%" gap={4}>
-              <Box width="94.5%" height="100%">
+              <Box width={{ base: "100%", sm: "94.5%" }} height="100%">
                 <QueueStack
                   orientation="horizontal"
                   title="Macrotask Queue"
@@ -471,7 +485,7 @@ function App() {
                   onAboutClick={() => onAboutClick("macrotaskqueue")}
                 ></QueueStack>
               </Box>
-              <Box width="94.5%" height="100%">
+              <Box width={{ base: "100%", sm: "94.5%" }} height="100%">
                 <QueueStack
                   orientation="horizontal"
                   title="Microtask Queue"
@@ -482,8 +496,17 @@ function App() {
             </Flex>
           </Box>
           <Box width="100%">
-            <Flex direction="row" height="100%" gap={4}>
-              <Box width="30%" height="100%" maxHeight="65vh">
+            <Flex
+              direction={{ base: "column", sm: "row" }}
+              height="100%"
+              gap={4}
+            >
+              <Box
+                width={{ base: "100%", sm: "30%" }}
+                height="100%"
+                maxHeight={{ base: "100%", sm: "65vh" }}
+                minHeight={{ base: "14%", sm: "100%" }}
+              >
                 <QueueStack
                   orientation="vertical"
                   title="Call Stack"
@@ -491,7 +514,11 @@ function App() {
                   onAboutClick={() => onAboutClick("callstack")}
                 ></QueueStack>
               </Box>
-              <Box width="30%" height="100%" maxHeight="65vh">
+              <Box
+                width={{ base: "100%", sm: "30%" }}
+                height="100%"
+                maxHeight={{ base: "100%", sm: "65vh" }}
+              >
                 <Stepper
                   title="Event Loop"
                   steps={eventLoopSteps}
@@ -499,7 +526,11 @@ function App() {
                   onAboutClick={() => onAboutClick("eventloop")}
                 ></Stepper>
               </Box>
-              <Box width="30%" height="100%" maxHeight="65vh">
+              <Box
+                width={{ base: "100%", sm: "30%" }}
+                height="100%"
+                maxHeight={{ base: "100%", sm: "65vh" }}
+              >
                 <Stepper
                   title="Ticks & Rejections"
                   steps={ticksAndRejectionsSteps}
@@ -511,6 +542,9 @@ function App() {
           </Box>
         </GridItem>
       </Grid>
+      <Box>
+        <Attributions></Attributions>
+      </Box>
       {!isEditMode && !isLoading ? (
         <ActionButtons
           onPlayNextEvent={onPlayNextEvent}
@@ -520,7 +554,6 @@ function App() {
       ) : (
         <></>
       )}
-      <Attributions></Attributions>
     </Container>
   );
 }

@@ -2,7 +2,7 @@ import { Link, Text } from "@chakra-ui/react";
 
 const Attributions: React.FC = () => {
   return (
-    <Text marginTop="8px" fontSize="20px">
+    <Text textStyle={{ base: "md", md: "2xl" }} marginTop="8px">
       By{" "}
       <Link
         color="#339933"
