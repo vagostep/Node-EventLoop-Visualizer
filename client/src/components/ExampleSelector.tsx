@@ -52,7 +52,7 @@ first();
       id: 1,
     },
     {
-      label: "Timer Callbacks",
+      label: "Timers",
       value: `
 setTimeout(function a() {}, 1000);
 
@@ -68,17 +68,17 @@ d();
       id: 2,
     },
     {
-      label: "Poll Callbacks",
+      label: "File System",
       value: `
 fs.readFile('file.js', 'utf-8', function readFile1(data, error) {
   console.log('readFile 1');
 });
 `.trim(),
-      level: "Easy",
+      level: "Intermediate",
       id: 3,
     },
     {
-      label: "Check Callbacks",
+      label: "Immediate",
       value: `
 setImmediate(function immediate1() {
   console.log('Immediate 1');
@@ -114,7 +114,7 @@ queueMicrotask(microTaskQueued);
 
 Promise.reject().catch(promiseRejected);
 `.trim(),
-      level: "Easy",
+      level: "Intermediate",
       id: 5,
     },
     {
@@ -152,6 +152,40 @@ process.nextTick(function nextTick2() {
 `.trim(),
       level: "Intermediate",
       id: 6,
+    },
+    {
+      label: "Sockets",
+      value: `
+// Creating a server
+const server = net.createServer((socket) => {
+  console.log('Client connected.');
+
+  socket.on('close', () => {
+    console.log('Socket closed.');
+  });
+
+  setTimeout(() => {
+    console.log('Destroying socket...');
+    socket.destroy();
+  }, 1000);
+});
+
+server.listen(() => {
+  console.log('Server listening...');
+
+  // Creating a client
+  const client = net.createConnection(() => {
+    console.log('Connection stablished.');
+  });
+  
+  client.on('close', () => {
+    console.log('Connection closed.');
+    server.close();
+  });
+});
+`.trim(),
+      level: "Advanced",
+      id: 7,
     },
   ],
 });

@@ -59,7 +59,7 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
 const before = (asyncId) => {
   const resource = asyncResources.get(asyncId)?.resource || {};
   const resourceName = resource?.constructor?.name;
-  // debug('[log] - before - resourceName: ', resourceName, ', name: ', resource?.callback?.name);
+  debug('[log] - before - resourceName: ', resourceName, ', name: ', resource?.callback?.name);
   if (resourceName === 'Promise') {
     postEvent(Events.BeforeMicrotask(asyncId));
   }
@@ -79,7 +79,6 @@ const before = (asyncId) => {
     resource.callback.name !== 'onSocketNT' &&
     resource.callback.name !== 'initRead' &&
     resource.callback.name !== 'emitReadable_' &&
-    resource.callback.name !== 'emitCloseNT' &&
     resource.callback.name !== 'endReadableNT' &&
     resource.callback.name !== 'finish' &&
     resource.callback.name !== 'resume_'
@@ -91,9 +90,9 @@ const before = (asyncId) => {
     const callbackName = resource.callback.name || 'anonymous';
     postEvent(Events.BeforeMicrotask(asyncId, callbackName));
   }
-  if (resourceName === 'FSReqCallback') {
-    const callbackName = resource?.callback?.name || 'anonymous';
-    postEvent(Events.BeforeMacrotask(asyncId, callbackName))
+  if (resourceName === "FSReqCallback" || resourceName === "TCP") {
+    const callbackName = resource?.callback?.name || "anonymous";
+    postEvent(Events.BeforeMacrotask(asyncId, callbackName));
   }
 };
 

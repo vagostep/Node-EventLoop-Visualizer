@@ -66,7 +66,7 @@ function processRequest(req) {
               const regexType =
                 /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:;\s*)?)+)/;
               const typeMatch = line.match(regexType);
-              console.log(typeMatch)
+              
               if (typeMatch) {
                 let message, type, name, funcId, start, end;
 

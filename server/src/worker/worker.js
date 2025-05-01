@@ -1,6 +1,6 @@
 const asyncHooks = require("node:async_hooks");
 const fs = require("node:fs");
-require("node:perf_hooks")
+const net = require('net');
 const babel = require("@babel/core");
 const traverse = require("@babel/traverse").default;
 const parser = require("@babel/parser");
@@ -58,10 +58,29 @@ const context = {
   queueMicrotask,
   __filename,
   fs: {
-    readFile: fs.readFile
+    readFile: fs.readFile,
   },
   process: {
     nextTick: process.nextTick,
+  },
+  net: {
+    createConnection: (callback) => {
+      return net.createConnection({
+        port: 4000
+      }, callback);
+    },
+    createServer: (callback) => {
+
+      const server = net.createServer(callback);
+
+      const originalServerListen = server.listen.bind(server);
+
+      server.listen = (listenCallback) => {
+        return originalServerListen(4000, listenCallback);
+      }
+
+      return server;
+    },
   },
   fetch,
   JSON,
