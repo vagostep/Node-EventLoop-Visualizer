@@ -1,6 +1,7 @@
 const asyncHooks = require("node:async_hooks");
 const fs = require("node:fs");
-const net = require('net');
+const net = require('node:net');
+const http = require("node:http");
 const babel = require("@babel/core");
 const traverse = require("@babel/traverse").default;
 const parser = require("@babel/parser");
@@ -63,8 +64,38 @@ const context = {
   process: {
     nextTick: process.nextTick,
   },
+  http: {
+    createServer: (callback) => {
+
+      const server = http.createServer(callback);
+
+      const originalServerListen = server.listen.bind(server);
+
+      server.listen = (listenCallback) => {
+        return originalServerListen(3000, listenCallback);
+      };
+
+      return server;
+    },
+    request: (callback) => {
+
+      if (typeof callback !== "function") {
+        throw new Error('Invalid argument: callback is not a function as 1st argument');
+      }
+
+      const options = {
+        hostname: "localhost",
+        port: 3000,
+        path: "/",
+        method: "GET"
+      };
+
+      return http.request(options, callback);
+    }
+  },
   net: {
     createConnection: (callback) => {
+      
       return net.createConnection({
         port: 4000
       }, callback);

@@ -15,7 +15,6 @@ const traceFuncCall = (babel) => {
 
         const { node } = path;
         const { listOfUserDefinedFunc } = state.opts;
-
         let fnName, start, end;
         if (t.isCallExpression(node["callee"]?.["object"])) {
           const callee = node.callee;
@@ -95,6 +94,24 @@ const traceFuncCall = (babel) => {
               funcNode.node.body.splice(i, 0, tracerEnter);
               funcNode.node.body.splice(i + 2, 0, tracerExit);
               i = i + 2;
+            } else if (t.isVariableDeclaration(bodyNode)) {
+              bodyNode?.declarations?.forEach((declaration) => {
+                const rightSide = declaration.init;
+
+                if (
+                  t.isCallExpression(rightSide) &&
+                  !_.isEqual(funcNode.node.body[i - 1], tracerEnter)
+                ) {
+                  const objectName = rightSide.callee.object.name;
+                  const propertyName = rightSide.callee.property.name;
+                  const functionName = `${objectName}.${propertyName}`;
+                  if (functionName === fnName) {
+                    funcNode.node.body.splice(i, 0, tracerEnter);
+                    funcNode.node.body.splice(i + 2, 0, tracerExit);
+                    i = i + 2;
+                  }
+                }
+              });
             }
           }
         }
@@ -125,8 +142,9 @@ const traceFuncCall = (babel) => {
                 const rightSide = declaration.init;
 
                 if (t.isCallExpression(rightSide)) {
-                  const functionName = rightSide.callee.name;
-
+                  const objectName = rightSide.callee.object.name;
+                  const propertyName = rightSide.callee.property.name;
+                  const functionName = `${objectName}.${propertyName}`;
                   if (functionName === fnName) {
                     programNode.node.body.splice(i, 0, tracerEnter);
                     programNode.node.body.splice(i + 2, 0, tracerExit);

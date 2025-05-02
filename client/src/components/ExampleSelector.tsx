@@ -187,6 +187,43 @@ server.listen(() => {
       level: "Advanced",
       id: 7,
     },
+    {
+      label: "Http Server",
+      value: `
+const server = http.createServer((req, res) => {
+  console.log('Server received a request:', req.method, req.url);
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello world!');
+  
+  setTimeout(() => {
+    server.close();
+  }, 1000);
+});
+
+server.on('close', () => {
+  console.log('Closing server.');
+});
+
+server.listen(() => {
+  console.log('Server listening...');
+
+  setTimeout(() => {
+  
+    const req = http.request((res) => {
+      console.log('Client received a response');
+  
+      res.on('end', () => {
+        console.log('Client disconnected.')
+      });
+    });
+  
+    req.end();
+  }, 10);
+});
+`.trim(),
+      level: "Advanced",
+      id: 8,
+    },
   ],
 });
 
