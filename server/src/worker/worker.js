@@ -126,12 +126,12 @@ const listOfUserDefinedFunc = [];
 // Get list of name of user defined function
 traverse(oriAST, {
   FunctionDeclaration: function (path) {
-    listOfUserDefinedFunc.push(path.node.id.name);
+    listOfUserDefinedFunc.push(path?.node?.id?.name);
   },
   ArrowFunctionExpression: function (path) {
     let fnName;
     if (t.isIdentifier(path.container.id)) {
-      fnName = path.container.id.name;
+      fnName = path?.container?.id?.name;
     } else {
       fnName = "anonymous";
     }

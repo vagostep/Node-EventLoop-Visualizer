@@ -18,7 +18,7 @@ const traceFuncCall = (babel) => {
         let fnName, start, end;
         if (t.isCallExpression(node["callee"]?.["object"])) {
           const callee = node.callee;
-          const property = callee.property.name;
+          const property = callee.property?.name;
           end = callee.end;
           const objectBase = callee.object?.callee?.object?.name;
           const propertyBase = callee.object?.callee?.property?.name;
@@ -30,16 +30,16 @@ const traceFuncCall = (babel) => {
           t.isIdentifier(node["callee"]["property"])
         ) {
           const callee = node.callee;
-          const object = callee.object.name;
+          const object = callee.object?.name;
           start = callee.start;
           end = callee.end;
-          const property = callee.property.name;
-          fnName = `${object}.${property}`;
+          const property = callee.property?.name;
+          fnName = property ? `${object}.${property}` : `${object}`;
         } else if (t.isIdentifier(node["callee"])) {
           const callee = node.callee;
           start = callee.start;
           end = callee.end;
-          fnName = callee.name;
+          fnName = callee?.name;
         } else {
           return;
         }
@@ -102,9 +102,11 @@ const traceFuncCall = (babel) => {
                   t.isCallExpression(rightSide) &&
                   !_.isEqual(funcNode.node.body[i - 1], tracerEnter)
                 ) {
-                  const objectName = rightSide.callee.object.name;
-                  const propertyName = rightSide.callee.property.name;
-                  const functionName = `${objectName}.${propertyName}`;
+                  const objectName = rightSide.callee.object?.name;
+                  const propertyName = rightSide.callee.property?.name;
+                  const functionName = propertyName
+                    ? `${objectName}.${propertyName}`
+                    : `${objectName}`;
                   if (functionName === fnName) {
                     funcNode.node.body.splice(i, 0, tracerEnter);
                     funcNode.node.body.splice(i + 2, 0, tracerExit);
@@ -123,7 +125,7 @@ const traceFuncCall = (babel) => {
             if (
               t.isFunctionDeclaration(bodyNode) &&
               t.isIdentifier(bodyNode.id) &&
-              bodyNode.id.name == fnName
+              bodyNode.id?.name == fnName
             ) {
               return;
             } else if (
@@ -137,14 +139,22 @@ const traceFuncCall = (babel) => {
               i = i + 2;
             } else if (t.isVariableDeclaration(bodyNode)) {
               // With this if we can select those callMethods that are used in an assigment declaration. 
-
               bodyNode?.declarations?.forEach((declaration) => {
                 const rightSide = declaration.init;
 
                 if (t.isCallExpression(rightSide)) {
-                  const objectName = rightSide.callee.object.name;
-                  const propertyName = rightSide.callee.property.name;
-                  const functionName = `${objectName}.${propertyName}`;
+
+                  let functionName;
+                  if (t.isMemberExpression(rightSide.callee)) {
+                    const objectName = rightSide.callee.object?.name;
+                    const propertyName = rightSide.callee.property?.name;
+                    functionName = propertyName
+                      ? `${objectName}.${propertyName}`
+                      : `${objectName}`;
+                  } else if (t.isIdentifier(rightSide.callee)) {
+                    functionName = rightSide.callee.name;
+                  }
+                  
                   if (functionName === fnName) {
                     programNode.node.body.splice(i, 0, tracerEnter);
                     programNode.node.body.splice(i + 2, 0, tracerExit);
