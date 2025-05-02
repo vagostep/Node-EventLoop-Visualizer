@@ -23,12 +23,12 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
     // postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
   }
   if (type === 'Timeout') {
-    const callbackName = resource._onTimeout.name || 'anonymous';
+    const callbackName = resource._onTimeout?.name || 'anonymous';
     const idleTimeout = resource._idleTimeout || 0;
     // postEvent(Events.InitTimeout(asyncId, callbackName, idleTimeout));
   }
   if (type === 'Immediate') {
-    const callbackName = resource._onImmediate.name || 'anonymous';
+    const callbackName = resource._onImmediate?.name || 'anonymous';
     // postEvent(Events.InitImmediate(asyncId, callbackName));
   }
   if (type === 'Microtask') {
@@ -38,15 +38,18 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
   }
   if (
     type === 'TickObject' &&
-    resource.callback?.name !== 'maybeReadMore_' &&
-    resource.callback?.name !== 'afterWriteTick' &&
-    resource.callback?.name !== 'onSocketNT' &&
-    resource.callback?.name !== 'initRead' &&
-    resource.callback?.name !== 'emitReadable_' &&
-    resource.callback?.name !== 'emitCloseNT' &&
-    resource.callback?.name !== 'endReadableNT' &&
-    resource.callback?.name !== 'finish' &&
-    resource.callback?.name !== 'resume_'
+    resource.callback?.name !== "maybeReadMore_" &&
+    resource.callback?.name !== "afterWriteTick" &&
+    resource.callback?.name !== "onSocketNT" &&
+    resource.callback?.name !== "emitCloseNT" &&
+    resource.callback?.name !== "initRead" &&
+    resource.callback?.name !== "emitReadable_" &&
+    resource.callback?.name !== "endReadableNT" &&
+    resource.callback?.name !== "endWritableNT" &&
+    resource.callback?.name !== "finish" &&
+    resource.callback?.name !== "resetCache" &&
+    resource.callback?.name !== "resume_" &&
+    resource.callback?.name !== "bound"
   ) {
     const callbackName = resource?.callback?.name || 'microtask';
     // debug('TickObject: ', callbackName);
@@ -64,34 +67,34 @@ const before = (asyncId) => {
     postEvent(Events.BeforeMicrotask(asyncId));
   }
   if (resourceName === 'Timeout') {
-    const callbackName = resource._onTimeout.name || 'anonymous';
+    const callbackName = resource._onTimeout?.name || 'anonymous';
     postEvent(Events.BeforeMacrotask(asyncId, callbackName));
   }
   if (resourceName === 'Immediate') {
-    const callbackName = resource._onImmediate.name || 'anonymous';
+    const callbackName = resource._onImmediate?.name || 'anonymous';
     postEvent(Events.BeforeMacrotask(asyncId, callbackName));
   }
   if (
     resourceName === "Object" &&
     resource.callback &&
-    resource.callback.name !== "maybeReadMore_" &&
-    resource.callback.name !== "afterWriteTick" &&
-    resource.callback.name !== "onSocketNT" &&
-    resource.callback.name !== "emitCloseNT" &&
-    resource.callback.name !== "initRead" &&
-    resource.callback.name !== "emitReadable_" &&
-    resource.callback.name !== "endReadableNT" &&
-    resource.callback.name !== "endWritableNT" &&
-    resource.callback.name !== "finish" &&
-    resource.callback.name !== "resetCache" &&
-    resource.callback.name !== "resume_" &&
-    resource.callback.name !== "bound"
+    resource.callback?.name !== "maybeReadMore_" &&
+    resource.callback?.name !== "afterWriteTick" &&
+    resource.callback?.name !== "onSocketNT" &&
+    resource.callback?.name !== "emitCloseNT" &&
+    resource.callback?.name !== "initRead" &&
+    resource.callback?.name !== "emitReadable_" &&
+    resource.callback?.name !== "endReadableNT" &&
+    resource.callback?.name !== "endWritableNT" &&
+    resource.callback?.name !== "finish" &&
+    resource.callback?.name !== "resetCache" &&
+    resource.callback?.name !== "resume_" &&
+    resource.callback?.name !== "bound"
   ) {
-    const callbackName = resource.callback.name || "anonymous";
+    const callbackName = resource.callback?.name || "anonymous";
     postEvent(Events.BeforeMicrotask(asyncId, callbackName));
   }
   if (resourceName === 'AsyncResource') {
-    const callbackName = resource.callback.name || 'anonymous';
+    const callbackName = resource.callback?.name || 'anonymous';
     postEvent(Events.BeforeMicrotask(asyncId, callbackName));
   }
   if (resourceName === "FSReqCallback" || resourceName === "TCP") {
@@ -102,7 +105,7 @@ const before = (asyncId) => {
 
 const after = (asyncId) => {
   const resource = asyncResources.get(asyncId)?.resource || {};
-  const resourceName = resource.constructor.name;
+  const resourceName = resource.constructor?.name;
   if (resourceName === 'Promise') {
     // postEvent(Events.AfterPromise(asyncId));
   }

@@ -52,7 +52,7 @@ first();
       id: 1,
     },
     {
-      label: "Timers",
+      label: "Timeouts",
       value: `
 setTimeout(function a() {}, 1000);
 
@@ -68,6 +68,23 @@ d();
       id: 2,
     },
     {
+      label: "Intervals",
+      value: `
+console.log('start');
+let i = 1;
+const interval = setInterval(function a() {
+  console.log('Interval ', i++);
+  
+  if (i > 4) {
+    clearInterval(interval);
+  }
+}, 100);
+console.log('end');
+`.trim(),
+      level: "Easy",
+      id: 3,
+    },
+    {
       label: "File System",
       value: `
 fs.readFile('file.js', 'utf-8', function readFile1(data, error) {
@@ -75,7 +92,7 @@ fs.readFile('file.js', 'utf-8', function readFile1(data, error) {
 });
 `.trim(),
       level: "Intermediate",
-      id: 3,
+      id: 4,
     },
     {
       label: "Immediate",
@@ -85,7 +102,7 @@ setImmediate(function immediate1() {
 });
 `.trim(),
       level: "Easy",
-      id: 4,
+      id: 5,
     },
     {
       label: "Micro Tasks",
@@ -115,7 +132,7 @@ queueMicrotask(microTaskQueued);
 Promise.reject().catch(promiseRejected);
 `.trim(),
       level: "Intermediate",
-      id: 5,
+      id: 6,
     },
     {
       label: "Nested Ticks",
@@ -151,7 +168,7 @@ process.nextTick(function nextTick2() {
 });
 `.trim(),
       level: "Intermediate",
-      id: 6,
+      id: 7,
     },
     {
       label: "Sockets",
@@ -185,7 +202,7 @@ server.listen(() => {
 });
 `.trim(),
       level: "Advanced",
-      id: 7,
+      id: 8,
     },
     {
       label: "Http Server",
@@ -222,7 +239,7 @@ server.listen(() => {
 });
 `.trim(),
       level: "Advanced",
-      id: 8,
+      id: 9,
     },
   ],
 });
