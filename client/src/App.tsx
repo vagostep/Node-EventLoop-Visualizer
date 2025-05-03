@@ -424,17 +424,17 @@ function App() {
       )}
       <Toaster />
       <Grid
-        templateColumns={{ base: "1fr", sm: "35% 65%" }}
-        templateRows={{ base: "100vh 100vh", sm: "1fr" }}
-        height={{ base: "auto", sm: "92vh" }}
+        templateColumns={{ base: "1fr", lg: "35% 65%" }}
+        templateRows={{ base: "100vh 100vh", lg: "1fr" }}
+        height={{ base: "auto", lg: "92vh" }}
         gap={4}
       >
         <GridItem
           colSpan={1}
           display="grid"
           gridTemplateRows={{
-            base: "8% 6% 5% 41.5% 32%",
-            md: "6% 3% 5% 47% 32%",
+            base: "8% 8% 5% 40% 30%",
+            lg: "6% 3% 5% 47% 32%",
           }}
           gap={4}
         >
@@ -490,12 +490,12 @@ function App() {
         <GridItem
           colSpan={1}
           display="grid"
-          gridTemplateRows={{ base: "30% 100%", sm: "30% 68%" }}
+          gridTemplateRows={{ base: "30% 100%", lg: "30% 68%" }}
           gap={4}
         >
           <Box width="100%">
             <Flex direction="column" height="100%" gap={4}>
-              <Box width={{ base: "100%", sm: "94.5%" }} height="100%">
+              <Box width={{ base: "100%", lg: "94.5%" }} height="100%">
                 <QueueStack
                   orientation="horizontal"
                   title="Macrotask Queue"
@@ -503,7 +503,7 @@ function App() {
                   onAboutClick={() => onAboutClick("macrotaskqueue")}
                 ></QueueStack>
               </Box>
-              <Box width={{ base: "100%", sm: "94.5%" }} height="100%">
+              <Box width={{ base: "100%", lg: "94.5%" }} height="100%">
                 <QueueStack
                   orientation="horizontal"
                   title="Microtask Queue"
@@ -515,15 +515,15 @@ function App() {
           </Box>
           <Box width="100%">
             <Flex
-              direction={{ base: "column", sm: "row" }}
+              direction={{ base: "column", lg: "row" }}
               height="100%"
               gap={4}
             >
               <Box
-                width={{ base: "100%", sm: "30%" }}
+                width={{ base: "100%", lg: "30%" }}
                 height="100%"
-                maxHeight={{ base: "100%", sm: "65vh" }}
-                minHeight={{ base: "15%", sm: "100%" }}
+                maxHeight={{ base: "100%", lg: "65vh" }}
+                minHeight={{ base: "15%", lg: "100%" }}
               >
                 <QueueStack
                   orientation="vertical"
@@ -533,9 +533,9 @@ function App() {
                 ></QueueStack>
               </Box>
               <Box
-                width={{ base: "100%", sm: "30%" }}
+                width={{ base: "100%", lg: "30%" }}
                 height="100%"
-                maxHeight={{ base: "100%", sm: "65vh" }}
+                maxHeight={{ base: "100%", lg: "65vh" }}
               >
                 <Stepper
                   title="Event Loop"
@@ -545,9 +545,9 @@ function App() {
                 ></Stepper>
               </Box>
               <Box
-                width={{ base: "100%", sm: "30%" }}
+                width={{ base: "100%", lg: "30%" }}
                 height="100%"
-                maxHeight={{ base: "100%", sm: "65vh" }}
+                maxHeight={{ base: "100%", lg: "65vh" }}
               >
                 <Stepper
                   title="Ticks & Rejections"

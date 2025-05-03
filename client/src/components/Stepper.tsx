@@ -37,7 +37,7 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, step
       <Card.Body padding="1rem">
         <Card.Title color="#fff" fontWeight="bold" fontSize="20px">
           <Flex justifyContent="space-between">
-            <Text textStyle={{ base: "md", md: "xl" }}>{title}</Text>
+            <Text textStyle={{ base: "md", sm: "xs", md: "xl" }}>{title}</Text>
             <Text
               textStyle="xs"
               color="#339933"
@@ -58,6 +58,7 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, step
           height="auto"
           count={steps.length}
           marginTop="24px"
+          size="sm"
           step={steps?.find((step) => step.name === activeStep)?.id || 0}
         >
           <Steps.List>
@@ -70,6 +71,8 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, step
                   title={step.title}
                   alignItems="center"
                   marginBottom="1rem"
+                  textStyle="xs"
+                  color="#fff"
                 >
                   <Steps.Indicator
                     color="white"
@@ -77,7 +80,7 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, step
                   >
                     <Steps.Status incomplete={<></>} complete={<LuCheck />} />
                   </Steps.Indicator>
-                  <Steps.Title>{step.title}</Steps.Title>
+                  <Steps.Title textStyle="xs">{step.title}</Steps.Title>
                   <Steps.Separator />
                 </Steps.Item>
               ))}
