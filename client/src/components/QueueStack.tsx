@@ -52,7 +52,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
           marginBottom={titleMarginBottom}
         >
           <Flex justifyContent="space-between">
-            <Text textStyle={{base: "md", md: "xl" }}>{title}</Text>
+            <Text textStyle={{ base: "md", sm: "xs", md: "xl" }}>{title}</Text>
             <Text
               textStyle="xs"
               color="#339933"
@@ -68,7 +68,13 @@ const QueueStack: React.FC<QueueStackProps> = ({
             </Text>
           </Flex>
         </Card.Title>
-        <Flex flexDirection={flexDirection} height="100%" gap="12px" width="100%">
+        <Flex
+          flexDirection={flexDirection}
+          alignItems="center"
+          height="100%"
+          gap="12px"
+          width="100%"
+        >
           <AnimatePresence>
             {frames?.map(({ name }, index) => {
               return (
@@ -81,16 +87,15 @@ const QueueStack: React.FC<QueueStackProps> = ({
                   borderRadius="4px"
                   shadow="sm"
                   color="black"
-                  padding="16px"
+                  padding="10px"
                   initial={initial}
                   animate={animate}
                   exit={exit}
                   transition={{ duration: 0.5 }}
                 >
                   <Text
-                    textStyle="md.8rem"
+                    textStyle={{ base: "md", sm: "xs", md: "sm" }}
                     textAlign="center"
-                    lineHeight="0.6"
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"
                   >

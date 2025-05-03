@@ -33,7 +33,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
           }}
         >
           <HiOutlineCode />
-          <Text textStyle="xl" fontWeight="semibold">
+          <Text textStyle={{ base: "sm", md: "lg" }} fontWeight="semibold">
             Edit
           </Text>
         </Button>
