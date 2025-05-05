@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const fs = require('node:fs');
 const util = require('node:util');
 function debug(...args) {
