@@ -1,5 +1,4 @@
 const { tracerFuncMaker, tracerErrorFuncMaker } = require('./util.js');
-const _ = require('lodash');
 // Inspired by: http://alltom.com/pages/instrumenting-javascript/
 // This is the target code to get after instrumenting
 // const traceBlock = (code, fnName, start, end) => `{
@@ -89,7 +88,6 @@ const traceFunction = (babel) => {
       t.isTryStatement(path.node.body.body[0]) &&
       t.isBlockStatement(path.node.body.body[0].block)
     ) {
-      // console.log(_.isEqual(path.node.body.body[0].block.body[0], tracerEnter));
       return;
     }
     // Clear the existing body

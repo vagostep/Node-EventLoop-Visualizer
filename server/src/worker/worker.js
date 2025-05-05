@@ -9,7 +9,6 @@ const vm = require("node:vm");
 const t = require("@babel/types");
 
 const fetch = require("node-fetch");
-const _ = require("lodash");
 
 // Custom Babel Plugin
 const { traceLoops } = require("./babelPlugin/loopTracer");
