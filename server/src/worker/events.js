@@ -1,7 +1,7 @@
-const prettyFormat = require('pretty-format');
+const {format: prettyFormat} = require('pretty-format');
 const event = (type, payload) => ({ type, payload });
 const arrToPrettyStr = (arr) =>
-  arr.map((a) => (Array.isString(a) ? a : prettyFormat(a))).join(' ') + '\n';
+  arr.map((a) => (typeof a === "string" ? a : prettyFormat(a))).join(' ') + '\n';
 const START_TIME = Date.now();
 const TIMEOUT_MILLIS = 5000;
 const EVENT_LIMIT = 250;
