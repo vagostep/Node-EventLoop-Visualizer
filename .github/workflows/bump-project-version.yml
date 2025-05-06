@@ -5,16 +5,16 @@ on:
     branches:
       - main
     paths:
-      - 'server/**' 
+      - 'server/**'  # solo se activa si se modifica algo dentro de /server
 
 jobs:
   bump-version:
-    if: github.event.head_commit.message != 'ci: bump version'
+    if: github.event.head_commit.message != 'ci: bump version'  # evita bucles de commit
     runs-on: ubuntu-latest
 
     defaults:
       run:
-        working-directory: server
+        working-directory: server  # Establece la carpeta de trabajo como /server
 
     steps:
       - name: Checkout repository
@@ -25,11 +25,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
 
       - name: Configure Git user
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Bump patch ve
+      - name: Bump patch version
+        run: |
+          npm version patch -m "ci: bump version to %s"
+          git push --follow-tags
