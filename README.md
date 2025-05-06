@@ -53,6 +53,14 @@ npm run start
 * fs.readFile()
 * setImmediate()
 * async/await
+* http.createServer
+* http.request
+* net.createServer
+* net.createConnection
+
+### Important info about supported features
+
+Some features (Ex. http.createServer) are just proxies to the original function. The reason is to control what operations are allowed to do, and prevent malicious attacks. Most of this proxies only receive a callback function as argument.
 
 # Issues
 
