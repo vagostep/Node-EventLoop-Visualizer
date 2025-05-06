@@ -16,6 +16,11 @@ jobs:
       run:
         working-directory: ./client
 
+    env:  # 👈 Aquí defines tus variables de entorno
+      VITE_ENVIRONMENT: "production"
+      VITE_API_URL: "https://node-eventloop-visualizer-server.onrender.com"
+      VITE_BASE_URL: "/Node-EventLoop-Visualizer"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
