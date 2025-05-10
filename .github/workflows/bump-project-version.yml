@@ -29,6 +29,8 @@ jobs:
 
       - name: Bump patch version
         run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "CUrrent version: $CURRENT_VERSION"
           # Realizamos el bump de versión (patch por defecto)
           NEW_VERSION=$(npm version patch -m "ci: bump version to %s")
           echo "New version: $NEW_VERSION"
