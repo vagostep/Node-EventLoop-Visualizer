@@ -7,6 +7,10 @@ on:
     # paths:
     #  - 'server/**'  # solo se activa si se modifica algo dentro de /server
 
+  
+permissions:
+  contents: write
+
 jobs:
   bump-version:
     runs-on: ubuntu-latest
