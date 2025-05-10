@@ -8,27 +8,13 @@ on:
     #  - 'server/**'  # solo se activa si se modifica algo dentro de /server
 
 jobs:
-  bump-version:
+  tag:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.NODE_EVENT_LOOP_VISUALIZER_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Bump patch version
+      - uses: actions/checkout@v2
+      - name: Create Tag
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git tag -a "v${{ github.run_number }}" -m "Release v${{ github.run_number }}"
           git push origin "v${{ github.run_number }}"
-
-      - name: Push changes
-        run: |
-          git push origin main
