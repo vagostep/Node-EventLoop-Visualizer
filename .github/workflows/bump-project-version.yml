@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.NODE_EVENT_LOOP_VISUALIZER_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -38,12 +38,7 @@ jobs:
           # Extraemos la nueva versión y la usamos como tag
           VERSION_TAG=$(echo $NEW_VERSION | sed 's/^v//')  # Eliminar la 'v' de la versión (opcional)
           echo "New tag: $VERSION_TAG"
-          if git rev-parse "v$VERSION_TAG" >/dev/null 2>&1; then
-          echo "Tag v$VERSION_TAG ya existe. Se forzará la creación del tag."
           git tag -f v$VERSION_TAG
-          else
-              git tag v$VERSION_TAG
-          fi
           git push --follow-tags
 
       - name: Push changes
