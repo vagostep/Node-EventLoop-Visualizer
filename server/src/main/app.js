@@ -149,7 +149,7 @@ function processRequest(req) {
         });
 
         // console.log("events: ", reducedEvents.map(JSON.stringify));        
-        const finalEvents = reduceEventLoopCycles(reducedEvents);
+        const finalEvents = reduceTicksAndRejectionsNonTriggeredByCallbackCycles(reduceEventLoopCycles(reducedEvents));
         resolve(finalEvents);
       });
     } else {
@@ -164,6 +164,49 @@ app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
 
+const reduceTicksAndRejectionsNonTriggeredByCallbackCycles = (reduceEvents) => {
+  const finalEvents = [];
+  const eventLoopCycles = [
+    "EventLoopPoll",
+    "EventLoopPendingCallbacks",
+    "EventLoopCheck",
+    "EventLoopCloseCallbacks",
+    "EventLoopTimers",
+    "EventLoopPendingCallbacks",
+    "EventLoopIdlePrepare",
+  ];
+  const targetSequence = [
+    "TicksAndRejectionsStart",
+    "TicksAndRejectionsNextTick",
+    "TicksAndRejectionsMicroTasks",
+    "TicksAndRejectionsFinish",
+  ]
+
+  let i = 0;
+
+  while (i < reduceEvents.length) {
+    if (i > 0) {
+      const prevEvent = reduceEvents[i - 1];
+      const slice = reduceEvents.slice(i, i + 4);
+      const events = slice.map((obj) => obj.type);
+      if (events.join() === targetSequence.join() && eventLoopCycles.includes(prevEvent?.type)) {
+        i += 4;
+        continue;
+      } else {
+        finalEvents.push(reduceEvents[i]);
+        i++;
+      }
+    } else {
+      finalEvents.push(reduceEvents[i]);
+      i++;
+    }
+    
+
+  }
+
+  return finalEvents;
+}
+
 const reduceEventLoopCycles = (reduceEvents) => {
   const finalEvents = [];
   const targetSequence = [
@@ -177,13 +220,13 @@ const reduceEventLoopCycles = (reduceEvents) => {
   ];
 
   const allowedCycles = 1;
-  let completeCycles = 1;
+  let completeCycles = 0;
   let i = 0;
   while (i < reduceEvents.length) {
     const slice = reduceEvents.slice(i, i + 7);
     const events = slice.map((obj) => obj.type);
     if (events.join() === targetSequence.join()) {
-      if (completeCycles > allowedCycles) {
+      if (completeCycles >= allowedCycles) {
         i += 7;
         continue;
       }

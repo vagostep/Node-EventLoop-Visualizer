@@ -209,7 +209,7 @@ function App() {
       setIsEditMode(false);
       const body = { type: COMMANDS.RUN_CODE, payload: code } as EventRequest;
       const { data } = await axios.post<Array<EventResponse>>(`${API_URL}/execute-code`, body);
-
+      console.log(data);
       const iterator = eventsIterator(data);
       setEvents(iterator);
     } catch (error) {
