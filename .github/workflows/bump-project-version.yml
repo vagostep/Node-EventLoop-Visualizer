@@ -7,10 +7,6 @@ on:
     # paths:
     #  - 'server/**'  # solo se activa si se modifica algo dentro de /server
 
-  
-permissions:
-  contents: write
-
 jobs:
   bump-version:
     runs-on: ubuntu-latest
@@ -33,17 +29,10 @@ jobs:
 
       - name: Bump patch version
         run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
-          git fetch --tags
-          # Realizamos el bump de versión (patch por defecto)
-          NEW_VERSION=$(npm version patch -m "ci: bump version to %s")
-          echo "New version: $NEW_VERSION"
-          # Extraemos la nueva versión y la usamos como tag
-          VERSION_TAG=$(echo $NEW_VERSION | sed 's/^v//')  # Eliminar la 'v' de la versión (opcional)
-          echo "New tag: $VERSION_TAG"
-          git tag -f v$VERSION_TAG
-          git push --follow-tags
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v${{ github.run_number }}" -m "Release v${{ github.run_number }}"
+          git push origin "v${{ github.run_number }}"
 
       - name: Push changes
         run: |
