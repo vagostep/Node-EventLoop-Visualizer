@@ -34,6 +34,7 @@ jobs:
           echo "New version: $NEW_VERSION"
           # Extraemos la nueva versión y la usamos como tag
           VERSION_TAG=$(echo $NEW_VERSION | sed 's/^v//')  # Eliminar la 'v' de la versión (opcional)
+          echo "New tag: $VERSION_TAG"
           git tag v$VERSION_TAG
           git push --follow-tags
 
