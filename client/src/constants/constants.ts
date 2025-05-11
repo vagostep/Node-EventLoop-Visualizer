@@ -7,3 +7,5 @@ export const defaultCode =
 export const COMMANDS = Object.freeze({
   RUN_CODE: "RunCode"
 });
+
+export const DELAY_TIME = 500;

@@ -10,13 +10,14 @@ import { getPastelIndexFor } from '@utils/colors';
 import { useColorMode } from '@components/ui/color-mode';
 import { Marker } from '../interfaces';
 import { useBreakpointValue } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 
 interface CodeEditorProps {
   code: string;
   isEditMode: boolean;
   onChangeCode: (code: string) => void;
   markers: Array<Marker>;
+  ref?: RefObject<HTMLDivElement | null>;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
@@ -24,6 +25,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   isEditMode,
   markers,
   onChangeCode,
+  ref,
 }) => {
   const convertCodeIndexToRowCol = (code: string, index: number) => {
     let col = 0;
@@ -59,7 +61,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   }, [isMobile])
 
   return (
-    <>
+    <div ref={ref}>
       <AceEditor
         mode="javascript"
         theme={colorMode === "light" ? "solarized_light" : "monokai"}
@@ -103,7 +105,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           wrap: true,
         }}
       />
-    </>
+    </div>
   );
 };
 

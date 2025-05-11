@@ -1,17 +1,15 @@
 import Terminal from '@components/Terminal';
 import './App.css'
 import CodeEditor from './components/CodeEditor'
-import { Box, Container, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react"
+import { Container, Grid, useBreakpointValue } from "@chakra-ui/react"
 import QueueStack, { Frame } from '@components/QueueStack';
 import Stepper, { Step } from '@components/Stepper';
 import Attributions from '@components/Attributions';
-import ExampleSelector from '@components/ExampleSelector';
 import ActionButtons from '@components/ActionButtons';
 import { useEffect, useRef, useState } from 'react';
 import axios from "axios";
-import CodeEditorButtons from '@components/CodeEditorButtons';
-import { API_URL, COMMANDS, defaultCode } from './constants';
-import { EventRequest, EventResponse, Event, Marker } from './interfaces';
+import { API_URL, COMMANDS, defaultCode, DELAY_TIME } from './constants';
+import { EventRequest, EventResponse, Event, Marker, EventMetrics } from './interfaces';
 import WelcomeDialog from '@components/WelcomeDialog';
 import CallStackAboutDialog from '@components/CallStackAboutDialog';
 import MicroTaskQueueAboutDialog from '@components/MicroTaskQueueAboutDialog';
@@ -19,6 +17,10 @@ import MacroTaskQueueAboutDialog from '@components/MacroTaskQueueAboutDialog';
 import EventLoopStepperAboutDialog from '@components/EventLoopStepperAboutDialog';
 import TicksAndRejectionsLoopStepperAboutDialog from '@components/TicksAndRejectionsLoopStepperAboutDialog';
 import { Toaster, toaster } from "@components/ui/toaster";
+import Branding from '@components/Branding';
+import ExampleController from '@components/ExampleController';
+import Metrics from '@components/Metrics';
+import { delay } from '@utils/delay';
 
 const eventLoopSteps: Array<Step> = [
   {
@@ -119,6 +121,16 @@ const ticksAndRejectionsSteps: Array<Step> = [
 
 function App() {
 
+  const isMobile = useBreakpointValue({ base: true, sm: false });
+
+  const callStackComponentRef = useRef<HTMLDivElement>(null);
+  const terminalComponentRef = useRef<HTMLDivElement>(null);
+  const microTaskQueueComponentRef = useRef<HTMLDivElement>(null);
+  const macroTaskQueueComponentRef = useRef<HTMLDivElement>(null);
+  const eventLoopComponentRef = useRef<HTMLDivElement>(null);
+  const ticksAndRejectionsLoopComponentRef = useRef<HTMLDivElement>(null);
+  const brandingComponentRef = useRef<HTMLDivElement>(null);
+
   const [code, setCode] = useState(defaultCode);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(true);
@@ -131,6 +143,11 @@ function App() {
   const [markers, setMarkers] = useState<Array<Marker>>([]);
   const markersRef = useRef(markers);
   const [events, setEvents] = useState<Generator<Event>>();
+  const [metrics, setMetrics] = useState<EventMetrics>({
+    loopCount: "0",
+    loopEvents: "0",
+    loopEventsWaiting: "0"
+  });
   const [eventLoopActiveStep, setEventLoopActiveStep] = useState<string>("none");
   const [ticksAndRejectionsActiveStep, setTicksAndRejectionsActiveStep] = useState<string>("none");
   const intervalRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -176,7 +193,7 @@ function App() {
     setCode(newCode);
   }
 
-  const onValueChange = (code: string | undefined) => {
+  const onExampleSelectorValueChange = (code: string | undefined) => {
     onChangeCode(code || "");
   }
 
@@ -196,6 +213,11 @@ function App() {
     setMarkers([]);
     setIsWelcomeDialogOpen(false);
     setIsCallStackAboutDialogOpen(false);
+    setMetrics({
+      loopCount: "0",
+      loopEvents: "0",
+      loopEventsWaiting: "0"
+    })
     if (isAutoPlay) {
       setIsAutoPlay(false);
       clearInterval(intervalRef.current);
@@ -220,26 +242,156 @@ function App() {
     }
   }
 
-  const onPlayNextEvent = () => {
+  const onPlayNextEvent = async () => {
     const next = events?.next();
     if (next?.done) {
       resetState();
+      isAutoPlay && await delay(DELAY_TIME);
+      brandingComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      brandingComponentRef.current?.focus();
       return true;
     };
 
     if (!next) {
       return true;
     }
+
+    const enterFunctionHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        callStackComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        callStackComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+      setCallStack((prev) => [...prev, { name: name }]);
+
+      setMarkers((prev) => [...prev, { start, end }]);
+    }
+
+    const exitFunctionHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        callStackComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        callStackComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+      const updatedCallStack = callStackRef.current?.slice(
+        0,
+        callStackRef.current?.length - 1
+      );
+      const updatedMarkers = markersRef.current?.slice(
+        0,
+        markersRef.current?.length - 1
+      );
+      setCallStack(updatedCallStack);
+
+      setMarkers(updatedMarkers);
+    }
+
+    const enqueueMicrotaskHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        microTaskQueueComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        microTaskQueueComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+      const microTask = {
+        id: funcId,
+        name: name,
+      };
+      setMicroTasks((prev) => [...prev, microTask]);
+    }
+
+    const dequeueMicrotaskHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        microTaskQueueComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        microTaskQueueComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+      const id = funcId;
+      const updatedMicrotasks = microTasks?.filter(
+        (microTask) => microTask.id !== id
+      );
+      setMicroTasks(updatedMicrotasks);
+    }
+
+    const enqueueMacrotaskHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        macroTaskQueueComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        macroTaskQueueComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+      const macroTask = {
+        id: funcId,
+        name: name,
+      };
+      setMacroTasks((prev) => [...prev, macroTask]);
+    }
+
+    const dequeueMacrotaskHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        macroTaskQueueComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        macroTaskQueueComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+      const id = funcId;
+      const updatedMacrotasks = macroTasks?.filter(
+        (microTask) => microTask.id !== id
+      );
+      setMacroTasks(updatedMacrotasks);
+    }
+
+    const consoleHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        terminalComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        terminalComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }
+      setOutputs((prev) => [...prev, message]);
+    }
+
+    const eventLoopHandler = async (isCompleted: boolean = false) => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        eventLoopComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        eventLoopComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }
+      setEventLoopActiveStep(type);
+
+      if (isCompleted) {
+        setEventLoopActiveStep("EventLoopCompleted");
+      }
+    }
+
+    const ticksAndRejectionsHandler = async (isCompleted: boolean = false) => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        ticksAndRejectionsLoopComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        ticksAndRejectionsLoopComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }
+      setTicksAndRejectionsActiveStep(type);
+
+      if (isCompleted) {
+        setTicksAndRejectionsActiveStep("TicksAndRejectionsCompleted");
+      }
+    }
     
     const {
       type,
       payload: { start, message, end, name, funcId },
+      metrics
     } = next.value;
     console.log("onPlayNextEvent: ", next.value);
     switch (type) {
       case "ConsoleLog":
       case "ConsoleWarn": {
-        setOutputs((prev) => [...prev, message]);
+        consoleHandler();
         break;
       }
       case "ConsoleError":
@@ -247,56 +399,30 @@ function App() {
       case "ErrorFunction":
         break;
       case "EnterFunction": {
-        setCallStack((prev) => [...prev, { name: name }]);
-        setMarkers((prev) => [...prev, { start, end }]);
+
+        enterFunctionHandler();  
         break;
       }
       case "ExitFunction": {
-        const updatedCallStack = callStackRef.current?.slice(
-          0,
-          callStackRef.current?.length - 1
-        );
-        const updatedMarkers = markersRef.current?.slice(
-          0,
-          markersRef.current?.length - 1
-        );
-        setCallStack(updatedCallStack);
-        setMarkers(updatedMarkers);
+        exitFunctionHandler();
         break;
       }
       case "EnqueueMicrotask": {
-        const microTask = {
-          id: funcId,
-          name: name,
-        };
-        setMicroTasks((prev) => [...prev, microTask]);
+        enqueueMicrotaskHandler();
         break;
       }
       case "DequeueMicrotask": {
-        const id = funcId;
-        const updatedMicrotasks = microTasks?.filter(
-          (microTask) => microTask.id !== id
-        );
-        setMicroTasks(updatedMicrotasks);
+        dequeueMicrotaskHandler();
         break;
       }
       case "EnqueueTask": {
-        const macroTask = {
-          id: funcId,
-          name: name,
-        };
-        setMacroTasks((prev) => [...prev, macroTask]);
+        enqueueMacrotaskHandler();
         break;
       }
-      case "DequeueTask":
-        {
-          const id = funcId;
-          const updatedMacrotasks = macroTasks?.filter(
-            (microTask) => microTask.id !== id
-          );
-          setMacroTasks(updatedMacrotasks);
-        }
+      case "DequeueTask": {
+        dequeueMacrotaskHandler();
         break;
+      }        
       case "EventLoopStart":
       case "EventLoopTimers":
       case "EventLoopPendingCallbacks":
@@ -304,23 +430,21 @@ function App() {
       case "EventLoopPoll":
       case "EventLoopCheck":
       case "EventLoopCloseCallbacks": {
-        setEventLoopActiveStep(type);
+        eventLoopHandler(false);
         break;
       }
       case "EventLoopFinish": {
-        setEventLoopActiveStep(type);
-        setEventLoopActiveStep("EventLoopCompleted");
+        eventLoopHandler(true)
         break;
       }
       case "TicksAndRejectionsStart":
       case "TicksAndRejectionsNextTick":
       case "TicksAndRejectionsMicroTasks":{
-        setTicksAndRejectionsActiveStep(type);
+        ticksAndRejectionsHandler(false);
         break;
       }
       case "TicksAndRejectionsFinish": {
-        setTicksAndRejectionsActiveStep(type);
-        setTicksAndRejectionsActiveStep("TicksAndRejectionsCompleted");
+        ticksAndRejectionsHandler(true);
         break;
       }
       case "UncaughtError": {
@@ -335,6 +459,10 @@ function App() {
       default:
         break;
     }
+
+    if (metrics && Object.keys(metrics)?.length > 0) {
+      setMetrics(metrics);
+    }
     return false;
   }
 
@@ -342,8 +470,8 @@ function App() {
 
     if (toggle) {
       setIsAutoPlay(true);
-      intervalRef.current = setInterval(() => {
-        const isCompleted = onPlayNextEvent();
+      intervalRef.current = setInterval(async () => {
+        const isCompleted = await onPlayNextEvent();
 
         if (isCompleted) {
           setIsAutoPlay(false);
@@ -380,192 +508,148 @@ function App() {
   };
 
   return (
-    <Container padding="16px">
+    <Container padding="16px" height="100vh">
       {isWelcomeDialogOpen && (
         <WelcomeDialog
           onWelcomeDialogChecked={onWelcomeDialogChecked}
           onWelcomeDialogClose={() => setIsWelcomeDialogOpen(false)}
-        ></WelcomeDialog>
+        />
       )}
       {isCallStackAboutDialogOpen && (
         <CallStackAboutDialog
           onCallStackAboutDialogClose={() =>
             setIsCallStackAboutDialogOpen(false)
           }
-        ></CallStackAboutDialog>
+        />
       )}
       {isMicrotaskQueueAboutDialogOpen && (
         <MicroTaskQueueAboutDialog
           onMicroTaskQueueAboutDialogClose={() => {
             setIsMicrotaskQueueAboutDialogOpen(false);
           }}
-        ></MicroTaskQueueAboutDialog>
+        />
       )}
       {isMacrotaskQueueAboutDialogOpen && (
         <MacroTaskQueueAboutDialog
           onMacroTaskQueueAboutDialogClose={() => {
             setIsMacrotaskQueueAboutDialogOpen(false);
           }}
-        ></MacroTaskQueueAboutDialog>
+        />
       )}
       {isEventLoopStepperAboutDialogOpen && (
         <EventLoopStepperAboutDialog
           onEventLoopStepperAboutDialogClose={() => {
             setIsEventLoopStepperAboutDialogOpen(false);
           }}
-        ></EventLoopStepperAboutDialog>
+        />
       )}
       {isTicksAndRejectionsStepperAboutDialogOpen && (
         <TicksAndRejectionsLoopStepperAboutDialog
           onTicksAndRejectionsLoopStepperAboutDialogClose={() => {
             setIsTicksAndRejectionsStepperAboutDialogOpen(false);
           }}
-        ></TicksAndRejectionsLoopStepperAboutDialog>
+        />
       )}
       <Toaster />
-      <Grid
-        templateColumns={{ base: "1fr", lg: "35% 65%" }}
-        templateRows={{ base: "100vh 100vh", lg: "1fr" }}
-        height={{ base: "auto", lg: "92vh" }}
-        gap={4}
-      >
-        <GridItem
-          colSpan={1}
-          display="grid"
-          gridTemplateRows={{
-            base: "8% 8% 5% 40% 30%",
-            lg: "6% 3% 5% 47% 32%",
-          }}
-          gap={4}
+      <Grid templateColumns={{ base: "1fr", md: "calc(35% - 8px) calc(65% - 8px)" }} height="100%" gap={4}>
+        <Grid 
+          templateRows={{ base: "6% 4% 5% 50% 31.4%", md: "6% 4% 5% 50% 35%" }}
+          height="calc(100vh - 64px)"
+          gap={2}>
+          <Branding ref={brandingComponentRef} />
+          <Attributions />
+          <ExampleController 
+            onValueChange={onExampleSelectorValueChange}
+            isEditMode={isEditMode}
+            isLoading={isLoading}
+            onButtonEditClick={onButtonEditClick}
+            onButtonRunClick={onButtonRunClick}
+          />
+          <CodeEditor
+            code={code}
+            isEditMode={isEditMode}
+            onChangeCode={onChangeCode}
+            markers={markers}
+          />
+          <Terminal
+            ref={terminalComponentRef}
+            outputs={outputs}
+            isRunning={!isLoading && !isEditMode}
+          />
+        </Grid>
+        <Grid 
+          templateRows={{ base: "50% 70%", md: "30% 70%" }}
+          height="calc(100vh - 36px)"
+          gap={2}
         >
-          <Box width="100%" padding="16px">
-            <Flex
-              justifyContent={{ base: "flex-start", sm: "space-around" }}
-              alignItems="center"
-              gap={{ base: "4", sm: "0" }}
+          <Grid 
+            templateColumns={{ base: "none", md: "calc(65% - 4px) calc(35% - 4px)" }}
+            templateRows={{ base: "40% 60%", md: "none" }}
+            height={{ base: "calc(100% - 16px)", md: "calc(100% - 4px)" }}
+            flexDirection={{ base: "column", md: "row" }}
+            gap={{ base: 4, md: 2 }}
+          >
+            <Grid
+              templateRows="50% 50%"
+              height="calc(100% - 8px)"
+              gap={2}
+              order={{ base: 2, md: 1 }}
             >
-              <Image
-                src={`${import.meta.env.VITE_BASE_URL}/light.svg`}
-                height="50px"
-                width="80px"
+              <QueueStack
+                ref={macroTaskQueueComponentRef}
+                orientation="horizontal"
+                title="Macrotask Queue"
+                frames={macroTasks}
+                onAboutClick={() => onAboutClick("macrotaskqueue")}
               />
-              <Text textStyle={{ base: "xl", lg: "2xl" }} textAlign="center">
-                Event Loop Visualizer{" "}
-              </Text>
-            </Flex>
-          </Box>
-
-          <Box>
-            <Attributions></Attributions>
-          </Box>
-          <Box width="100%">
-            <Flex justifyContent="space-between">
-              <ExampleSelector
-                onValueChange={onValueChange}
-                disabled={!isEditMode}
-              ></ExampleSelector>
-              <CodeEditorButtons
-                isEditMode={isEditMode}
-                isLoading={isLoading}
-                onButtonEditClick={onButtonEditClick}
-                onButtonRunClick={onButtonRunClick}
-              ></CodeEditorButtons>
-            </Flex>
-          </Box>
-          <Box display="flex" alignItems="center" width="100%">
-            <CodeEditor
-              code={code}
-              isEditMode={isEditMode}
-              onChangeCode={onChangeCode}
-              markers={markers}
-            ></CodeEditor>
-          </Box>
-          <Box width="100%">
-            <Terminal
-              outputs={outputs}
-              isRunning={!isLoading && !isEditMode}
-            ></Terminal>
-          </Box>
-        </GridItem>
-        <GridItem
-          colSpan={1}
-          display="grid"
-          gridTemplateRows={{ base: "30% 100%", lg: "30% 68%" }}
-          gap={4}
-        >
-          <Box width="100%">
-            <Flex direction="column" height="100%" gap={4}>
-              <Box width={{ base: "100%", lg: "94.5%" }} height="100%">
-                <QueueStack
-                  orientation="horizontal"
-                  title="Macrotask Queue"
-                  frames={macroTasks}
-                  onAboutClick={() => onAboutClick("macrotaskqueue")}
-                ></QueueStack>
-              </Box>
-              <Box width={{ base: "100%", lg: "94.5%" }} height="100%">
-                <QueueStack
-                  orientation="horizontal"
-                  title="Microtask Queue"
-                  frames={microTasks}
-                  onAboutClick={() => onAboutClick("microtaskqueue")}
-                ></QueueStack>
-              </Box>
-            </Flex>
-          </Box>
-          <Box width="100%">
-            <Flex
-              direction={{ base: "column", lg: "row" }}
-              height="100%"
-              gap={4}
-            >
-              <Box
-                width={{ base: "100%", lg: "30%" }}
-                height="100%"
-                maxHeight={{ base: "100%", lg: "65vh" }}
-                minHeight={{ base: "15%", lg: "100%" }}
-              >
-                <QueueStack
-                  orientation="vertical"
-                  title="Call Stack"
-                  frames={callStack}
-                  onAboutClick={() => onAboutClick("callstack")}
-                ></QueueStack>
-              </Box>
-              <Box
-                width={{ base: "100%", lg: "30%" }}
-                height="100%"
-                maxHeight={{ base: "100%", lg: "65vh" }}
-              >
-                <Stepper
-                  title="Event Loop"
-                  steps={eventLoopSteps}
-                  activeStep={eventLoopActiveStep}
-                  onAboutClick={() => onAboutClick("eventloop")}
-                ></Stepper>
-              </Box>
-              <Box
-                width={{ base: "100%", lg: "30%" }}
-                height="100%"
-                maxHeight={{ base: "100%", lg: "65vh" }}
-              >
-                <Stepper
-                  title="Ticks & Rejections"
-                  steps={ticksAndRejectionsSteps}
-                  activeStep={ticksAndRejectionsActiveStep}
-                  onAboutClick={() => onAboutClick("ticksandrejectionsloop")}
-                ></Stepper>
-              </Box>
-            </Flex>
-          </Box>
-        </GridItem>
+              <QueueStack
+                ref={microTaskQueueComponentRef}
+                orientation="horizontal"
+                title="Microtask Queue"
+                frames={microTasks}
+                onAboutClick={() => onAboutClick("microtaskqueue")}
+              />
+            </Grid>
+            <Grid height="100%" order={{ base: 1, md: 2 }}>
+              <Metrics onAboutClick={() => onAboutClick("metrics")} metrics={metrics}></Metrics>
+            </Grid>
+          </Grid>
+          <Grid
+            templateColumns={{ base: "none", md: "repeat(3, 1fr)" }}
+            templateRows={{ base: "19.923% auto auto", md: "none" }}
+            height="calc(100% - 4px)"
+            gap={2}
+          >
+            <QueueStack
+              ref={callStackComponentRef}
+              orientation="vertical"
+              title="Call Stack"
+              frames={callStack}
+              onAboutClick={() => onAboutClick("callstack")}
+            />
+            <Stepper
+              ref={eventLoopComponentRef}
+              title="Event Loop"
+              steps={eventLoopSteps}
+              activeStep={eventLoopActiveStep}
+              onAboutClick={() => onAboutClick("eventloop")}
+            />
+            <Stepper
+              ref={ticksAndRejectionsLoopComponentRef}
+              title="Ticks & Rejections"
+              steps={ticksAndRejectionsSteps}
+              activeStep={ticksAndRejectionsActiveStep}
+              onAboutClick={() => onAboutClick("ticksandrejectionsloop")}
+            />
+          </Grid>
+        </Grid>
       </Grid>
       {!isEditMode && !isLoading ? (
         <ActionButtons
           onPlayNextEvent={onPlayNextEvent}
           onAutoplayNextEvent={onAutoplayNextEvent}
           isAutoPlay={isAutoPlay}
-        ></ActionButtons>
+        />
       ) : (
         <></>
       )}

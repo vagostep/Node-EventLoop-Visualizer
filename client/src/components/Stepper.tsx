@@ -1,5 +1,5 @@
 import { Card, Flex, Steps, Text } from "@chakra-ui/react";
-import React from "react";
+import React, { RefObject } from "react";
 import { LuCheck } from "react-icons/lu";
 
 export interface Step {
@@ -13,9 +13,10 @@ export interface StepperProps {
   steps: Array<Step>;
   activeStep: string;
   onAboutClick: () => void;
+  ref?: RefObject<HTMLDivElement | null>;
 }
 
-const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, steps = [] }) => {
+const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, ref, steps = [] }) => {
 
   const getIndicatorBackgroundColor = (index: number) => {
     const activeStepId = steps?.find((step) => step.name === activeStep)?.id || 0;
@@ -33,7 +34,7 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, step
     }
   }
   return (
-    <Card.Root height="100%" width="100%" bg="#333333" shadow="sm">
+    <Card.Root height="100%" width="100%" bg="#333333" shadow="sm" ref={ref}>
       <Card.Body padding="1rem">
         <Card.Title color="#fff" fontWeight="bold" fontSize="20px">
           <Flex justifyContent="space-between">
@@ -80,7 +81,7 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, step
                   >
                     <Steps.Status incomplete={<></>} complete={<LuCheck />} />
                   </Steps.Indicator>
-                  <Steps.Title textStyle="xs">{step.title}</Steps.Title>
+                  <Steps.Title textStyle={{ base: "xs", md: "sm" }}>{step.title}</Steps.Title>
                   <Steps.Separator />
                 </Steps.Item>
               ))}

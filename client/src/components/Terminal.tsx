@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { RefObject, useEffect, useRef } from "react";
 import styled from 'styled-components';
 
 export interface TerminalProps {
   outputs: Array<string>;
   isRunning: boolean;
+    ref?: RefObject<HTMLDivElement | null>;
 }
 
 const TopBar = styled.div`
@@ -84,7 +85,7 @@ const PromptLine = styled.p`
   text-align: left;
 `;
 
-const Terminal: React.FC<TerminalProps> = ({ outputs, isRunning }) => {
+const Terminal: React.FC<TerminalProps> = ({ outputs, isRunning, ref }) => {
 
   const containerRef = useRef <HTMLDivElement>(null);
 
@@ -95,7 +96,7 @@ const Terminal: React.FC<TerminalProps> = ({ outputs, isRunning }) => {
   }, [outputs]);
 
   return (
-    <TerminalContainer>
+    <TerminalContainer ref={ref}>
       <TopBar>
         <TopBarTitle>
           <Title>user@desktop:~</Title>

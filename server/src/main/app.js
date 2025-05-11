@@ -68,7 +68,7 @@ function processRequest(req) {
               const typeMatch = line.match(regexType);
               
               if (typeMatch) {
-                let message, type, name, funcId, start, end;
+                let message, type, name, funcId, start, end, loopCount, loopEvents, loopEventsWaiting;
 
                 let source = typeMatch[1];
                 const match = typeMatch[2]?.trim()?.split(";");
@@ -93,6 +93,9 @@ function processRequest(req) {
                   const run = getTransformedMessageLine(match[1]);
                   if (run == 2) {
                     type = getTransformedMessageLine(match[2]);
+                    loopCount = getTransformedMessageLine(match[4]);
+                    loopEvents = getTransformedMessageLine(match[5]);
+                    loopEventsWaiting = getTransformedMessageLine(match[6]);
                   }
                 }
 
@@ -104,6 +107,11 @@ function processRequest(req) {
                     funcId: funcId,
                     start: start,
                     end: end,
+                  },
+                  metrics: {
+                    loopCount,
+                    loopEvents,
+                    loopEventsWaiting,
                   },
                   type: type,
                 };
