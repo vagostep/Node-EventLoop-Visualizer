@@ -33,7 +33,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
           }}
         >
           <HiOutlineCode />
-          <Text textStyle={{ base: "sm", md: "lg" }} fontWeight="semibold">
+          <Text textStyle={{ base: "xs", md: "lg" }} fontWeight="semibold">
             Edit
           </Text>
         </Button>
@@ -55,7 +55,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
         >
           <AiOutlineSend fontWeight="semibold" />
           {!isLoading ? (
-            <Text textStyle="xl" fontWeight="semibold">
+            <Text textStyle={{ base: "xs", md: "lg" }} fontWeight="semibold">
               Run
             </Text>
           ) : (

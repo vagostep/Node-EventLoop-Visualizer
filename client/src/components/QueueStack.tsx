@@ -1,6 +1,6 @@
 import { Box, Card, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { getPastelForIndex } from "@utils/colors";
-import React from "react";
+import React, { RefObject } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MotionBox = motion.create(Box);
@@ -18,6 +18,7 @@ export interface QueueStackProps {
   orientation: Orientation;
   frames: Array<Frame>;
   onAboutClick: () => void;
+  ref?: RefObject<HTMLDivElement | null>;
 }
 
 const QueueStack: React.FC<QueueStackProps> = ({
@@ -25,6 +26,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
   orientation,
   frames = [],
   onAboutClick,
+  ref
 }) => {
   const isMobile = useBreakpointValue({ base: true, sm: false });
 
@@ -44,7 +46,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
   const titleMarginBottom = isHorizontal ? "10px" : "3rem";
 
   return (
-    <Card.Root height="100%" width="100%" bg="#333333" shadow="sm">
+    <Card.Root height="100%" width="100%" bg="#333333" shadow="sm" ref={ref}>
       <Card.Body padding="1rem" overflow="hidden" height="100%" width="100%">
         <Card.Title
           color="#fff"
@@ -82,7 +84,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
                   key={index}
                   width={width}
                   minWidth="120px"
-                  height="40px"
+                  height={{ base: "35px", md: "40px" }}
                   bg={getPastelForIndex(index)}
                   borderRadius="4px"
                   shadow="sm"
@@ -94,7 +96,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
                   transition={{ duration: 0.5 }}
                 >
                   <Text
-                    textStyle={{ base: "md", sm: "xs", md: "sm" }}
+                    textStyle={{ base: "xs", sm: "xs", md: "sm" }}
                     textAlign="center"
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"

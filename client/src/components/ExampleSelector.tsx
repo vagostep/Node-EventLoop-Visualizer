@@ -287,6 +287,7 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
       value={value}
       disabled={disabled}
       onValueChange={_onValueChange}
+      textStyle={{ base: "xs", md: "md" }}
     >
       <Select.HiddenSelect />
       <Select.Control>
@@ -304,7 +305,7 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
               <div key={level}>
                 <Select.ItemGroup key={level}>
                   {items.map((item) => (
-                    <Select.Item item={item} key={item.id}>
+                    <Select.Item item={item} key={item.id} textStyle={{ base: "xs", md: "md" }}>
                       {item.label}
                       <Select.ItemIndicator />
                     </Select.Item>

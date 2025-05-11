@@ -1,6 +1,7 @@
 export interface EventResponse {
   type: string;
   payload: EventPayload;
+  metrics: EventMetrics;
 }
 
 export interface EventRequest {
@@ -16,9 +17,17 @@ export interface EventPayload {
   end: string;
   message: string;
 }
+
+export interface EventMetrics {
+  loopCount: string;
+  loopEvents: string;
+  loopEventsWaiting: string;
+}
+
 export interface Event {
   type: string;
   payload: EventPayload;
+  metrics: EventMetrics;
 }
 
 export interface Marker {
