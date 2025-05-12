@@ -616,7 +616,7 @@ function App() {
           </Grid>
           <Grid
             templateColumns={{ base: "none", lg: "repeat(3, 1fr)" }}
-            templateRows={{ base: "19.923% auto auto", lg: "none" }}
+            templateRows={{ base: "28.223% auto auto", lg: "none" }}
             height="calc(100% - 4px)"
             gap={2}
           >
