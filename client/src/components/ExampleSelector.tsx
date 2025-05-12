@@ -280,14 +280,14 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
   return (
     <Select.Root
       collection={examples}
-      size={{ base: "xs", md: "sm" }}
+      size={{ base: "xs", lg: "sm" }}
       width="71%"
       shadow="sm"
       borderRadius="0px"
       value={value}
       disabled={disabled}
       onValueChange={_onValueChange}
-      textStyle={{ base: "xs", md: "md" }}
+      textStyle={{ base: "xs", lg: "md" }}
     >
       <Select.HiddenSelect />
       <Select.Control>
@@ -305,7 +305,7 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
               <div key={level}>
                 <Select.ItemGroup key={level}>
                   {items.map((item) => (
-                    <Select.Item item={item} key={item.id} textStyle={{ base: "xs", md: "md" }}>
+                    <Select.Item item={item} key={item.id} textStyle={{ base: "xs", lg: "md" }}>
                       {item.label}
                       <Select.ItemIndicator />
                     </Select.Item>

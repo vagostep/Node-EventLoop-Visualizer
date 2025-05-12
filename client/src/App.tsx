@@ -551,9 +551,9 @@ function App() {
         />
       )}
       <Toaster />
-      <Grid templateColumns={{ base: "1fr", md: "calc(35% - 8px) calc(65% - 8px)" }} height="100%" gap={4}>
+      <Grid templateColumns={{ base: "1fr", lg: "calc(35% - 8px) calc(65% - 8px)" }} height="100%" gap={4}>
         <Grid 
-          templateRows={{ base: "6% 4% 5% 50% 31.4%", md: "6% 4% 5% 50% 35%" }}
+          templateRows={{ base: "6% 4% 5% 50% 31.4%", lg: "6% 4% 5% 50% 35%" }}
           height="calc(100vh - 64px)"
           gap={2}>
           <Branding ref={brandingComponentRef} />
@@ -578,22 +578,22 @@ function App() {
           />
         </Grid>
         <Grid 
-          templateRows={{ base: "50% 70%", md: "30% 70%" }}
+          templateRows={{ base: "50% 70%", lg: "30% 70%" }}
           height="calc(100vh - 36px)"
           gap={2}
         >
           <Grid 
-            templateColumns={{ base: "none", md: "calc(65% - 4px) calc(35% - 4px)" }}
-            templateRows={{ base: "40% 60%", md: "none" }}
-            height={{ base: "calc(100% - 16px)", md: "calc(100% - 4px)" }}
-            flexDirection={{ base: "column", md: "row" }}
-            gap={{ base: 4, md: 2 }}
+            templateColumns={{ base: "none", lg: "calc(65% - 4px) calc(35% - 4px)" }}
+            templateRows={{ base: "40% 60%", lg: "none" }}
+            height={{ base: "calc(100% - 16px)", lg: "calc(100% - 4px)" }}
+            flexDirection={{ base: "column", lg: "row" }}
+            gap={{ base: 4, lg: 2 }}
           >
             <Grid
               templateRows="50% 50%"
               height="calc(100% - 8px)"
               gap={2}
-              order={{ base: 2, md: 1 }}
+              order={{ base: 2, lg: 1 }}
             >
               <QueueStack
                 ref={macroTaskQueueComponentRef}
@@ -610,13 +610,13 @@ function App() {
                 onAboutClick={() => onAboutClick("microtaskqueue")}
               />
             </Grid>
-            <Grid height="100%" order={{ base: 1, md: 2 }}>
+            <Grid height="100%" order={{ base: 1, lg: 2 }}>
               <Metrics onAboutClick={() => onAboutClick("metrics")} metrics={metrics}></Metrics>
             </Grid>
           </Grid>
           <Grid
-            templateColumns={{ base: "none", md: "repeat(3, 1fr)" }}
-            templateRows={{ base: "19.923% auto auto", md: "none" }}
+            templateColumns={{ base: "none", lg: "repeat(3, 1fr)" }}
+            templateRows={{ base: "19.923% auto auto", lg: "none" }}
             height="calc(100% - 4px)"
             gap={2}
           >

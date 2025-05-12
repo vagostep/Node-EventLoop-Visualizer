@@ -20,7 +20,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
     <>
       {!isEditMode && !isLoading ? (
         <Button
-          size={{ base: "sm", md: "lg" }}
+          size={{ base: "sm", lg: "lg" }}
           variant="surface"
           bg="#e99c40"
           borderRadius="0px"
@@ -33,13 +33,13 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
           }}
         >
           <HiOutlineCode />
-          <Text textStyle={{ base: "xs", md: "lg" }} fontWeight="semibold">
+          <Text textStyle={{ base: "xs", lg: "lg" }} fontWeight="semibold">
             Edit
           </Text>
         </Button>
       ) : (
         <Button
-          size={{ base: "sm", md: "lg" }}
+          size={{ base: "sm", lg: "lg" }}
           variant="surface"
           bg="#339933"
           borderRadius="0px"
@@ -55,7 +55,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
         >
           <AiOutlineSend fontWeight="semibold" />
           {!isLoading ? (
-            <Text textStyle={{ base: "xs", md: "lg" }} fontWeight="semibold">
+            <Text textStyle={{ base: "xs", lg: "lg" }} fontWeight="semibold">
               Run
             </Text>
           ) : (
