@@ -32,7 +32,7 @@ const Metrics: React.FC<MetricsProps> = ({
             </Text>
           </Flex>
         </Card.Title>
-        <SimpleGrid columns={{ base: 3, lg: 2 }} gap={2} height="100%" padding="16px">
+        <SimpleGrid columns={{ base: 3, lg: 2 }} gap={2} height="100%" padding={{ base: "0", lg: "16px" }}>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" gap={1}>
             <Icon size="lg">
               <GrPowerCycle />
