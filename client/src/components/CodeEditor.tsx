@@ -54,7 +54,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   const { colorMode } = useColorMode();
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   useEffect(() => {
 

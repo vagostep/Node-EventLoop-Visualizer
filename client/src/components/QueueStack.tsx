@@ -28,7 +28,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
   onAboutClick,
   ref
 }) => {
-  const isMobile = useBreakpointValue({ base: true, sm: false });
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const isHorizontal = !!isMobile || orientation === "horizontal";
   const flexDirection = isHorizontal ? "row" : "column-reverse";
@@ -54,7 +54,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
           marginBottom={titleMarginBottom}
         >
           <Flex justifyContent="space-between">
-            <Text textStyle={{ base: "md", sm: "xs", md: "xl" }}>{title}</Text>
+            <Text textStyle={{ base: "md", sm: "xs", lg: "xl" }}>{title}</Text>
             <Text
               textStyle="xs"
               color="#339933"
@@ -84,7 +84,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
                   key={index}
                   width={width}
                   minWidth="120px"
-                  height={{ base: "35px", md: "40px" }}
+                  height={{ base: "35px", lg: "40px" }}
                   bg={getPastelForIndex(index)}
                   borderRadius="4px"
                   shadow="sm"
@@ -96,7 +96,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
                   transition={{ duration: 0.5 }}
                 >
                   <Text
-                    textStyle={{ base: "xs", sm: "xs", md: "sm" }}
+                    textStyle={{ base: "xs", sm: "xs", lg: "sm" }}
                     textAlign="center"
                     textOverflow="ellipsis"
                     whiteSpace="nowrap"
