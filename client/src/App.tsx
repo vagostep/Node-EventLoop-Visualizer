@@ -578,7 +578,7 @@ function App() {
           />
         </Grid>
         <Grid 
-          templateRows={{ base: "50% 70%", lg: "30% 70%" }}
+          templateRows={{ base: "50% 50%", lg: "30% 70%" }}
           height="calc(100vh - 36px)"
           gap={2}
         >
@@ -590,7 +590,7 @@ function App() {
             gap={{ base: 4, lg: 2 }}
           >
             <Grid
-              templateRows="auto auto"
+              templateRows="50% 50%"
               height="calc(100% - 8px)"
               gap={2}
               order={{ base: 2, lg: 1 }}
