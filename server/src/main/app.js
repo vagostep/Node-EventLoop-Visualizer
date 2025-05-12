@@ -157,7 +157,7 @@ function processRequest(req) {
         });
 
         // console.log("events: ", reducedEvents.map(JSON.stringify));        
-        const finalEvents = reduceTicksAndRejectionsNonTriggeredByCallbackCycles(reduceEventLoopCycles(reducedEvents));
+        const finalEvents = reduceEventLoopCycles(reduceTicksAndRejectionsNonTriggeredByCallbackCycles(reducedEvents));
         resolve(finalEvents);
       });
     } else {
@@ -191,25 +191,21 @@ const reduceTicksAndRejectionsNonTriggeredByCallbackCycles = (reduceEvents) => {
   ]
 
   let i = 0;
+  let prevEvent;
 
   while (i < reduceEvents.length) {
+    const currentEvent = reduceEvents[i]?.type;
     if (i > 0) {
-      const prevEvent = reduceEvents[i - 1];
-      const slice = reduceEvents.slice(i, i + 4);
-      const events = slice.map((obj) => obj.type);
-      if (events.join() === targetSequence.join() && eventLoopCycles.includes(prevEvent?.type)) {
-        i += 4;
-        continue;
-      } else {
-        finalEvents.push(reduceEvents[i]);
-        i++;
-      }
-    } else {
-      finalEvents.push(reduceEvents[i]);
-      i++;
-    }
-    
+      prevEvent = prevEvent ?? reduceEvents[i - 1]?.type;
 
+      if (targetSequence.includes(currentEvent) && eventLoopCycles.includes(prevEvent)) {
+        i++;
+        continue;
+      } 
+    } 
+    finalEvents.push(reduceEvents[i]);
+    prevEvent = null;    
+    i++;
   }
 
   return finalEvents;
