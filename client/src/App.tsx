@@ -554,7 +554,7 @@ function App() {
       <Grid templateColumns={{ base: "1fr", lg: "calc(35% - 8px) calc(65% - 8px)" }} height="100%" gap={4}>
         <Grid 
           templateRows={{ base: "6% 4% 5% 50% 31.4%", lg: "6% 4% 5% 50% 35%" }}
-          height="calc(100vh - 64px)"
+          height="calc(100dvh - 64px)"
           gap={2}>
           <Branding ref={brandingComponentRef} />
           <Attributions />
@@ -579,7 +579,7 @@ function App() {
         </Grid>
         <Grid 
           templateRows={{ base: "50% 50%", lg: "30% 70%" }}
-          height="calc(100vh - 36px)"
+          height="calc(100dvh - 36px)"
           gap={2}
         >
           <Grid 
