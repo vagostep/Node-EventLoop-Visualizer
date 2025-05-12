@@ -508,7 +508,7 @@ function App() {
   };
 
   return (
-    <Container padding="16px" height="100vh">
+    <Container padding="16px" height="100%">
       {isWelcomeDialogOpen && (
         <WelcomeDialog
           onWelcomeDialogChecked={onWelcomeDialogChecked}

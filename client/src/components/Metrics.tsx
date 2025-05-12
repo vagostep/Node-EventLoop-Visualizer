@@ -32,23 +32,23 @@ const Metrics: React.FC<MetricsProps> = ({
             </Text>
           </Flex>
         </Card.Title>
-        <SimpleGrid columns={{ base: 3, lg: 2 }} gap={2} height="100%" padding={{ base: "0", lg: "16px" }}>
+        <SimpleGrid columns={{ base: 3, lg: 2 }} gap={2} height="100%" padding={{ base: "6px", lg: "16px" }}>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" gap={1}>
-            <Icon size="lg">
+            <Icon size={{ base: "sm", lg: "lg" }}>
               <GrPowerCycle />
             </Icon>
             <Text truncate textStyle={{ base: "xs", lg: "md" }}>Loop Count</Text>
             <Text textStyle={{ base: "xs", lg: "md" }}>{metrics.loopCount || 0}</Text>
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" gap={1}>
-            <Icon size="lg">
+            <Icon size={{ base: "sm", lg: "lg" }}>
               <MdOutlineEventAvailable /> 
             </Icon>
             <Text truncate textStyle={{ base: "xs", lg: "md" }}>Events</Text>
             <Text textStyle={{ base: "xs", lg: "md" }}>{metrics.loopEvents || 0}</Text>
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" gap={1}>
-            <Icon size="lg">
+            <Icon size={{ base: "sm", lg: "lg" }}>
               <MdOutlineEventRepeat />
             </Icon>
             <Text truncate textStyle={{ base: "xs", lg: "md" }}>Events Waiting</Text>
