@@ -132,7 +132,7 @@ const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
               >
                 <Checkbox.HiddenInput />
                 <Checkbox.Control />
-                <Checkbox.Label>Don't show again</Checkbox.Label>
+                <Checkbox.Label>Don't show this again</Checkbox.Label>
               </Checkbox.Root>
               <Dialog.ActionTrigger asChild>
                 <Button variant="outline" onClick={onWelcomeDialogClose}>

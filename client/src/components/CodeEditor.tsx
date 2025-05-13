@@ -9,7 +9,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import { getPastelIndexFor } from '@utils/colors';
 import { useColorMode } from '@components/ui/color-mode';
 import { Marker } from '../interfaces';
-import { useBreakpointValue } from '@chakra-ui/react';
+import { Box, useBreakpointValue } from '@chakra-ui/react';
 import { RefObject, useEffect } from 'react';
 
 interface CodeEditorProps {
@@ -61,7 +61,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   }, [isMobile])
 
   return (
-    <div ref={ref}>
+    <Box ref={ref} height="100%">
       <AceEditor
         mode="javascript"
         theme={colorMode === "light" ? "solarized_light" : "monokai"}
@@ -74,7 +74,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             0px 2px 4px color-mix(in srgb, black 64%, transparent),
             0px 0px 1px inset
             color-mix(in srgb, var(--chakra-colors-gray-300) 30%, transparent)`,
-          borderRadius: "8px",
           lineHeight: isMobile ? "12px" : "16px",
         }}
         focus={true}
@@ -105,7 +104,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           wrap: true,
         }}
       />
-    </div>
+    </Box>
   );
 };
 
