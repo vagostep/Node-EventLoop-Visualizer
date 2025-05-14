@@ -20,6 +20,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({
           borderRadius="24px"
           boxSize="56px"
           shadow="sm"
+          size={{ base: "sm", lg: "lg" }}
           variant="surface"
           onClick={() =>
             isAutoPlay ? onAutoplayNextEvent(false) : onAutoplayNextEvent(true)
@@ -37,7 +38,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({
                 }
           }
         >
-          <Icon size="xl">
+          <Icon size={{ base: "md", lg: "xl" }}>
             {isAutoPlay ? <HiOutlinePause /> : <HiOutlineFastForward />}
           </Icon>
         </Button>
@@ -49,7 +50,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({
           borderRadius="24px"
           boxSize="56px"
           width="140px"
-          size="lg"
+          size={{ base: "sm", lg: "lg" }}
           shadow="sm"
           disabled={isAutoPlay}
           variant="surface"
@@ -59,11 +60,11 @@ const ActionButtons: FC<ActionButtonsProps> = ({
             borderColor: "transparent",
           }}
         >
-          <Icon size="2xl">
+          <Icon size={{ base: "md", lg: "2xl" }}>
             <HiOutlinePlay />
           </Icon>
 
-          <Text textStyle="xl" fontWeight="semibold">
+          <Text textStyle={{ base: "sm", lg: "xl" }} fontWeight="semibold">
             Step
           </Text>
         </Button>

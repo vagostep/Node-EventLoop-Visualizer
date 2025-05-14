@@ -26,25 +26,54 @@ console.log('log 2');
     {
       label: "Call Stack",
       value: `
-function tenth() { }
+function tenth() { 
+  console.log("tenth");
+}
 
-function ninth() { tenth() }
+function ninth() { 
+  tenth(); 
+  console.log("ninth")
+}
 
-function eigth() { ninth() }
+function eigth() { 
+  ninth();
+  console.log("eigth");
+}
 
-function seventh() { eigth() }
+function seventh() { 
+  eigth();
+  console.log("seventh");
+}
 
-function sixth() { seventh() }
+function sixth() { 
+  seventh(); 
+  console.log("sixth");
+}
 
-function fifth() { sixth() }
+function fifth() { 
+  sixth(); 
+  console.log("fifth");
+}
 
-function fourth() { fifth() }
+function fourth() { 
+  fifth(); 
+  console.log("fourth");
+}
 
-function third() { fourth() }
+function third() { 
+  fourth(); 
+  console.log("third");
+}
 
-function second() { third() }
+function second() { 
+  third(); 
+  console.log("second");
+}
 
-function first() { second() }
+function first() { 
+  second(); 
+  console.log("first");
+}
 
 first();
 `.trim(),

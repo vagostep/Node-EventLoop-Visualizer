@@ -1,10 +1,10 @@
 import { Box, Card, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { getPastelForIndex } from "@utils/colors";
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DELAY_TIME, UI_QUEUE_SIZES } from "../constants";
 
 const MotionBox = motion.create(Box);
-
 
 export type Orientation = 'horizontal' | 'vertical';
 
@@ -29,6 +29,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
   ref
 }) => {
   const isMobile = useBreakpointValue({ base: true, lg: false });
+  const isMobileLandscape = useBreakpointValue({ base: false, sm: true, md: false });
 
   const isHorizontal = !!isMobile || orientation === "horizontal";
   const flexDirection = isHorizontal ? "row" : "column-reverse";
@@ -45,71 +46,107 @@ const QueueStack: React.FC<QueueStackProps> = ({
     isHorizontal ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 };
   const titleMarginBottom = isHorizontal ? "10px" : "3rem";
 
+  const scrollComponentRef = useRef<HTMLDivElement | null>(null);
+  const lastFrameComponentRef = useRef<HTMLDivElement | null>(null);
+  const prevFramesLength = useRef(0);
+
+  useEffect(() => {
+    const container = scrollComponentRef.current;
+    const divisor = isMobileLandscape ? UI_QUEUE_SIZES.LANDSCAPE : isMobile ? UI_QUEUE_SIZES.MOBILE : UI_QUEUE_SIZES.DESKTOP;
+    const wasAdded = frames.length > prevFramesLength.current;
+
+    if (container && frames.length > divisor) {
+      if (isMobile) {
+        container.scrollLeft = container.scrollLeft + 132;
+      } else if (!isMobile && wasAdded) {
+        setTimeout(() => {
+          container.scrollTop = container.scrollHeight * -1;     
+        }, DELAY_TIME);   
+        
+      }
+    }
+    prevFramesLength.current = frames.length;
+  }, [frames.length, isMobile, isMobileLandscape])
+
   return (
-    <Card.Root height="100%" width="100%" bg="#333333" shadow="sm" ref={ref}>
-      <Card.Body padding="1rem" overflow="hidden" height="100%" width="100%">
-        <Card.Title
-          color="#fff"
-          fontWeight="bold"
-          marginBottom={titleMarginBottom}
-        >
-          <Flex justifyContent="space-between">
-            <Text textStyle={{ base: "md", sm: "xs", lg: "xl" }}>{title}</Text>
-            <Text
-              textStyle="xs"
-              color="#339933"
-              mt="8px"
-              _hover={{
-                color: "#66cc33",
-                textDecoration: "none",
-                cursor: "pointer",
-              }}
-              onClick={onAboutClick}
-            >
-              About
-            </Text>
-          </Flex>
-        </Card.Title>
-        <Flex
-          flexDirection={flexDirection}
-          alignItems="center"
-          height="100%"
-          gap="12px"
-          width="100%"
-        >
-          <AnimatePresence>
-            {frames?.map(({ name }, index) => {
-              return (
-                <MotionBox
-                  key={index}
-                  width={width}
-                  minWidth="120px"
-                  height={{ base: "35px", lg: "40px" }}
-                  bg={getPastelForIndex(index)}
-                  borderRadius="4px"
-                  shadow="sm"
-                  color="black"
-                  padding="10px"
-                  initial={initial}
-                  animate={animate}
-                  exit={exit}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Text
-                    textStyle={{ base: "xs", sm: "xs", lg: "sm" }}
-                    textAlign="center"
-                    textOverflow="ellipsis"
-                    whiteSpace="nowrap"
+    <Box height="100%" overflow="hidden" ref={ref}>
+      <Card.Root height="100%" width="100%" bg="#333333" shadow="sm" overflow="hidden">
+        <Card.Body overflow="hidden" padding="1rem" height="100%" width="100%" justifyContent="space-between">
+          <Card.Title
+            color="#fff"
+            fontWeight="bold"
+            marginBottom={titleMarginBottom}
+          >
+            <Flex justifyContent="space-between">
+              <Text textStyle={{ base: "md", sm: "xs", lg: "xl" }}>{title}</Text>
+              <Text
+                textStyle="xs"
+                color="#339933"
+                mt="8px"
+                _hover={{
+                  color: "#66cc33",
+                  textDecoration: "none",
+                  cursor: "pointer",
+                }}
+                onClick={onAboutClick}
+              >
+                About
+              </Text>
+            </Flex>
+          </Card.Title>
+          <Flex
+            flexDirection={flexDirection}
+            alignItems="center"
+            height={{ base: "100%", lg: !isHorizontal ? "460px" : "100%" }}
+            maxHeight={{ base: "none", lg: !isHorizontal ? "460px" : "100%" }}
+            gap="12px"
+            width={{ base: "252px", sm: "516px", lg: "100%" }}
+            overflowX="hidden"
+            overflowY="auto"
+            scrollBehavior="smooth"
+            ref={scrollComponentRef}
+            css={{
+              scrollbarWidth: "none", // Firefox
+              "&::-webkit-scrollbar": {
+                display: "none", // Chrome, Safari
+              },
+            }}
+          >
+            <AnimatePresence>
+              {frames?.map(({ name }, index) => {
+                return (
+                  <MotionBox
+                    key={index}
+                    width={width}
+                    minWidth="120px"
+                    height={{ base: "35px", lg: "40px" }}
+                    bg={getPastelForIndex(index)}
+                    borderRadius="4px"
+                    shadow="sm"
+                    color="black"
+                    padding="10px"
+                    initial={initial}
+                    animate={animate}
+                    exit={exit}
+                    transition={{ duration: DELAY_TIME / 1000 }}
+                    ref={frames.length - 1 === index ? lastFrameComponentRef : null}
                   >
-                    {name}
-                  </Text>
-                </MotionBox>
-              );
-            })}
-          </AnimatePresence>
-        </Flex>
-      </Card.Body>
-    </Card.Root>
+                    <Text
+                      textStyle={{ base: "xs", lg: "sm" }}
+                      textAlign="center"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                    >
+                      {name}
+                    </Text>
+                  </MotionBox>
+                );
+              })}
+            </AnimatePresence>
+          </Flex>
+        </Card.Body>
+      </Card.Root>
+    </Box>
   );
 };
 

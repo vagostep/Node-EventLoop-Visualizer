@@ -477,7 +477,7 @@ function App() {
           setIsAutoPlay(false);
           clearInterval(intervalRef.current);
         }
-      }, 1000);
+      }, DELAY_TIME * 2);
     } else {
       setIsAutoPlay(false);
       clearInterval(intervalRef.current);
