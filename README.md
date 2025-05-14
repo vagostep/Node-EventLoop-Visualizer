@@ -49,7 +49,7 @@ npm run start
 * process.nextTick()
 * queueMicrotask()
 * setTimeout()
-* setInterval() (You need to add a clearInterval() at some point to spot the execution)
+* setInterval() (You need to add a clearInterval() at some point to stop the execution)
 * fs.readFile()
 * setImmediate()
 * async/await
