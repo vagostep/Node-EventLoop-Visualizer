@@ -1,6 +1,6 @@
 # Node.js EventLoop Visualizer
 
-![Demo of the Node-Event-Loop](client/event-loop-visualizer2.gif)
+![Demo of the Node-Event-Loop](client/event-loop-visualizer3.gif)
 
 Try it out! [Node-Event-Loop](https://vagostep.github.io/Node-EventLoop-Visualizer/)
 
