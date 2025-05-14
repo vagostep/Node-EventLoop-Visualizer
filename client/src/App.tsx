@@ -1,7 +1,7 @@
 import Terminal from '@components/Terminal';
 import './App.css'
 import CodeEditor from './components/CodeEditor'
-import { Container, Grid, useBreakpointValue } from "@chakra-ui/react"
+import { Container, Grid, useBreakpointValue, Box } from "@chakra-ui/react"
 import QueueStack, { Frame } from '@components/QueueStack';
 import Stepper, { Step } from '@components/Stepper';
 import Attributions from '@components/Attributions';
@@ -121,7 +121,7 @@ const ticksAndRejectionsSteps: Array<Step> = [
 
 function App() {
 
-  const isMobile = useBreakpointValue({ base: true, sm: false });
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const callStackComponentRef = useRef<HTMLDivElement>(null);
   const terminalComponentRef = useRef<HTMLDivElement>(null);
@@ -477,7 +477,7 @@ function App() {
           setIsAutoPlay(false);
           clearInterval(intervalRef.current);
         }
-      }, 1000);
+      }, DELAY_TIME * 2);
     } else {
       setIsAutoPlay(false);
       clearInterval(intervalRef.current);
@@ -508,7 +508,7 @@ function App() {
   };
 
   return (
-    <Container padding="16px" height="100%">
+    <Container padding={{ base: "0px", md: "16px"}} height="100dvh">
       {isWelcomeDialogOpen && (
         <WelcomeDialog
           onWelcomeDialogChecked={onWelcomeDialogChecked}
@@ -551,96 +551,123 @@ function App() {
         />
       )}
       <Toaster />
-      <Grid templateColumns={{ base: "1fr", lg: "calc(35% - 8px) calc(65% - 8px)" }} height="100%" gap={4}>
+      <Grid templateColumns={{ base: "1fr", lg: "35% 65%" }} height="100%">
         <Grid 
-          templateRows={{ base: "6% 4% 5% 50% 31.4%", lg: "6% 4% 5% 50% 35%" }}
-          height="calc(100dvh - 64px)"
-          gap={2}>
-          <Branding ref={brandingComponentRef} />
-          <Attributions />
-          <ExampleController 
-            onValueChange={onExampleSelectorValueChange}
-            isEditMode={isEditMode}
-            isLoading={isLoading}
-            onButtonEditClick={onButtonEditClick}
-            onButtonRunClick={onButtonRunClick}
-          />
-          <CodeEditor
-            code={code}
-            isEditMode={isEditMode}
-            onChangeCode={onChangeCode}
-            markers={markers}
-          />
-          <Terminal
-            ref={terminalComponentRef}
-            outputs={outputs}
-            isRunning={!isLoading && !isEditMode}
-          />
+          templateRows={{ base: "8% 5% 5% 50% 32%", lg: "6% 4% 5% 50% 35%" }}
+          height={{ base: "800px", lg: "100%" }}
+          width="100%"
+        >
+          <Box padding="8px">
+            <Branding ref={brandingComponentRef} />
+          </Box>
+          <Box padding="8px">
+            <Attributions />
+          </Box>
+          <Box padding="8px">
+            <ExampleController 
+              onValueChange={onExampleSelectorValueChange}
+              isEditMode={isEditMode}
+              isLoading={isLoading}
+              onButtonEditClick={onButtonEditClick}
+              onButtonRunClick={onButtonRunClick}
+            />
+          </Box>
+          <Box padding="8px">
+            <CodeEditor
+              code={code}
+              isEditMode={isEditMode}
+              onChangeCode={onChangeCode}
+              markers={markers}
+            />
+          </Box>
+          <Box padding="8px">
+            <Terminal
+              ref={terminalComponentRef}
+              outputs={outputs}
+              isRunning={!isLoading && !isEditMode}
+            />
+          </Box>
         </Grid>
         <Grid 
-          templateRows={{ base: "50% 50%", lg: "30% 70%" }}
-          height="calc(100dvh - 36px)"
-          gap={2}
+          templateRows={{ base: "372px auto", lg: "30% 70%" }}
+          height="100%"
+          width="100%"
         >
           <Grid 
-            templateColumns={{ base: "none", lg: "calc(65% - 4px) calc(35% - 4px)" }}
-            templateRows={{ base: "40% 60%", lg: "none" }}
-            height={{ base: "calc(100% - 16px)", lg: "calc(100% - 4px)" }}
+            templateColumns={{ base: "none", lg: "calc(calc(100% / 3) * 2) auto" }}
+            templateRows={{ base: "144px 228px", lg: "none" }}
+            height="100%"
+            maxHeight={{ base: "400px", lg: "none" }}
             flexDirection={{ base: "column", lg: "row" }}
-            gap={{ base: 4, lg: 2 }}
           >
             <Grid
-              templateRows="50% 50%"
-              height="calc(100% - 8px)"
-              gap={2}
+              templateRows={{ base: "114px 114px", lg: "50% 50%" }}
+              height="100%"
+              maxHeight={{ base: "228px", lg: "none" }}
               order={{ base: 2, lg: 1 }}
             >
-              <QueueStack
-                ref={macroTaskQueueComponentRef}
-                orientation="horizontal"
-                title="Macrotask Queue"
-                frames={macroTasks}
-                onAboutClick={() => onAboutClick("macrotaskqueue")}
-              />
-              <QueueStack
-                ref={microTaskQueueComponentRef}
-                orientation="horizontal"
-                title="Microtask Queue"
-                frames={microTasks}
-                onAboutClick={() => onAboutClick("microtaskqueue")}
-              />
+              <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }}>
+                <QueueStack
+                  ref={macroTaskQueueComponentRef}
+                  orientation="horizontal"
+                  title="Macrotask Queue"
+                  frames={macroTasks}
+                  onAboutClick={() => onAboutClick("macrotaskqueue")}
+                />
+              </Box>
+              <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }}>
+                <QueueStack
+                  ref={microTaskQueueComponentRef}
+                  orientation="horizontal"
+                  title="Microtask Queue"
+                  frames={microTasks}
+                  onAboutClick={() => onAboutClick("microtaskqueue")}
+                />
+              </Box>
             </Grid>
-            <Grid height="100%" order={{ base: 1, lg: 2 }}>
-              <Metrics onAboutClick={() => onAboutClick("metrics")} metrics={metrics}></Metrics>
+            <Grid 
+              height="100%" 
+              order={{ base: 1, lg: 2 }}
+              maxHeight={{ base: "120px", lg: "none" }}
+            >
+              <Box padding="8px">
+                <Metrics onAboutClick={() => onAboutClick("metrics")} metrics={metrics}></Metrics>
+              </Box>
             </Grid>
           </Grid>
           <Grid
             templateColumns={{ base: "none", lg: "repeat(3, 1fr)" }}
-            templateRows={{ base: "28.223% auto auto", lg: "none" }}
-            height="calc(100% - 4px)"
-            gap={2}
+            templateRows={{ base: "114px auto auto", lg: "none" }}
+            maxHeight={{ base: "430px", lg: "none" }}
+            height="100%"
           >
-            <QueueStack
-              ref={callStackComponentRef}
-              orientation="vertical"
-              title="Call Stack"
-              frames={callStack}
-              onAboutClick={() => onAboutClick("callstack")}
-            />
-            <Stepper
-              ref={eventLoopComponentRef}
-              title="Event Loop"
-              steps={eventLoopSteps}
-              activeStep={eventLoopActiveStep}
-              onAboutClick={() => onAboutClick("eventloop")}
-            />
-            <Stepper
-              ref={ticksAndRejectionsLoopComponentRef}
-              title="Ticks & Rejections"
-              steps={ticksAndRejectionsSteps}
-              activeStep={ticksAndRejectionsActiveStep}
-              onAboutClick={() => onAboutClick("ticksandrejectionsloop")}
-            />
+            <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }}>
+              <QueueStack
+                ref={callStackComponentRef}
+                orientation="vertical"
+                title="Call Stack"
+                frames={callStack}
+                onAboutClick={() => onAboutClick("callstack")}
+              />
+            </Box>
+            <Box padding="8px">
+              <Stepper
+                ref={eventLoopComponentRef}
+                title="Event Loop"
+                steps={eventLoopSteps}
+                activeStep={eventLoopActiveStep}
+                onAboutClick={() => onAboutClick("eventloop")}
+              />
+            </Box>
+            <Box padding="8px">
+              <Stepper
+                ref={ticksAndRejectionsLoopComponentRef}
+                title="Ticks & Rejections"
+                steps={ticksAndRejectionsSteps}
+                activeStep={ticksAndRejectionsActiveStep}
+                onAboutClick={() => onAboutClick("ticksandrejectionsloop")}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Grid>

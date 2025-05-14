@@ -3,7 +3,7 @@ import { Box, Link, Text } from "@chakra-ui/react";
 const Attributions: React.FC = () => {
   return (
     <Box height="100%" display="flex" justifyContent="center" alignItems="center">
-      <Text textStyle={{ base: "xs", lg: "md" }}>
+      <Text textStyle="xs">
         By{" "}
         <Link
           color="#339933"

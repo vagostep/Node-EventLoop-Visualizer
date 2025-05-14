@@ -9,3 +9,9 @@ export const COMMANDS = Object.freeze({
 });
 
 export const DELAY_TIME = 500;
+
+export const UI_QUEUE_SIZES = Object.freeze({
+  MOBILE: 2,
+  LANDSCAPE: 4,
+  DESKTOP: 9
+})
