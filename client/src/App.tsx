@@ -21,6 +21,7 @@ import Branding from '@components/Branding';
 import ExampleController from '@components/ExampleController';
 import Metrics from '@components/Metrics';
 import { delay } from '@utils/delay';
+import MetricsAboutDialog from '@components/MetricsAboutDialog';
 
 const eventLoopSteps: Array<Step> = [
   {
@@ -165,6 +166,7 @@ function App() {
     isTicksAndRejectionsStepperAboutDialogOpen,
     setIsTicksAndRejectionsStepperAboutDialogOpen,
   ] = useState(false);
+  const [isMetricsAboutDialogOpen, setIsMetricsAboutDialogOpen] = useState(false);
 
   useEffect(() => {
     callStackRef.current = callStack;
@@ -502,6 +504,9 @@ function App() {
       case "ticksandrejectionsloop":
         setIsTicksAndRejectionsStepperAboutDialogOpen(true);
         break
+      case "metrics":
+        setIsMetricsAboutDialogOpen(true);
+        break;
       default:
         break;
     }
@@ -549,6 +554,13 @@ function App() {
             setIsTicksAndRejectionsStepperAboutDialogOpen(false);
           }}
         />
+      )}
+      {isMetricsAboutDialogOpen && (
+        <MetricsAboutDialog
+        onMetricsAboutDialogClose={() => {
+          setIsMetricsAboutDialogOpen(false);
+        }}
+      />
       )}
       <Toaster />
       <Grid templateColumns={{ base: "1fr", lg: "35% 65%" }} height="100%">
