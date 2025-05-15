@@ -1,4 +1,5 @@
 import { Button, CloseButton, Dialog, Link, List, Portal, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface MetricsAboutDialogProps {
   onMetricsAboutDialogClose: () => void
@@ -6,6 +7,10 @@ export interface MetricsAboutDialogProps {
 const MetricsAboutDialog: React.FC<MetricsAboutDialogProps> = ({
   onMetricsAboutDialogClose,
 }) => {
+
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+  const buttonBackgroundColor = useColorModeValue("#fbf1d3", "#1a1a1a");
+
   return (
     <Dialog.Root key="welcome-dialog" size="lg" open={true}>
       <Portal>
@@ -19,8 +24,8 @@ const MetricsAboutDialog: React.FC<MetricsAboutDialogProps> = ({
                 </Text>
               </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <p>
+            <Dialog.Body color={fontColor}>
+              <Text>
                 The{" "}
                 <Link
                   color="#339933"
@@ -33,8 +38,9 @@ const MetricsAboutDialog: React.FC<MetricsAboutDialogProps> = ({
                 module in Node.js provides an API to measure the performance of different parts of a Node.js application with high precision. 
                 It allows developers to track the timing of function execution, measure performance bottlenecks, and gather detailed runtime metrics similar to what a browser’s 
                 performance API offers. 
-              </p>
-              <p>
+              </Text>
+              <br />
+              <Text>
                 The {" "}
                 <Link
                   color="#339933"
@@ -44,7 +50,7 @@ const MetricsAboutDialog: React.FC<MetricsAboutDialogProps> = ({
                 >
                   performanceNodeTiming.uvMetricsInfo
                 </Link>{" "} property specifically provides low-level metrics from Node.js's underlying libuv library.
-              </p>
+              </Text>
               <br />
               <Text textStyle="2xl" textAlign="left" fontWeight="bold">
                 Metrics
@@ -52,7 +58,7 @@ const MetricsAboutDialog: React.FC<MetricsAboutDialogProps> = ({
               <br />
               <List.Root>
                 <List.Item>
-                  Loop Count: Number of event loop iterations..
+                  Loop Count: Number of event loop iterations.
                 </List.Item>
                 <List.Item>
                   Events: Number of events that have been processed by the event handler.
@@ -65,13 +71,37 @@ const MetricsAboutDialog: React.FC<MetricsAboutDialogProps> = ({
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline" onClick={onMetricsAboutDialogClose}>
+                <Button 
+                  variant="outline" 
+                  onClick={onMetricsAboutDialogClose}
+                  bg={buttonBackgroundColor}
+                  color={fontColor}
+                  _hover={{
+                    border: "none"
+                  }} _focus={{
+                    border: "none",
+                    outline: "none",
+                    borderRadius: "0px"
+                  }}
+                >
                   Close
                 </Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" onClick={onMetricsAboutDialogClose} />
+              <CloseButton 
+                size="sm" 
+                onClick={onMetricsAboutDialogClose}
+                bg={buttonBackgroundColor}
+                color={fontColor}
+                _hover={{
+                  border: "none"
+                }} _focus={{
+                  border: "none",
+                  outline: "none",
+                  borderRadius: "0px"
+                }}
+              />
             </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>

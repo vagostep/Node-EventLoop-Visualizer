@@ -1,9 +1,13 @@
 import { Box, Link, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 const Attributions: React.FC = () => {
+
+  const fontColor = useColorModeValue('#000000', '#ffffff');
+
   return (
     <Box height="100%" display="flex" justifyContent="center" alignItems="center">
-      <Text textStyle="xs">
+      <Text textStyle="xs" color={fontColor}>
         By{" "}
         <Link
           color="#339933"

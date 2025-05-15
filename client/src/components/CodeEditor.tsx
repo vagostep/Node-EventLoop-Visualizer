@@ -7,7 +7,7 @@ import 'ace-builds/src-noconflict/worker-javascript';
 import "ace-builds/src-noconflict/ext-language_tools";
 
 import { getPastelIndexFor } from '@utils/colors';
-import { useColorMode } from '@components/ui/color-mode';
+import { useColorMode, useColorModeValue } from '@components/ui/color-mode';
 import { Marker } from '../interfaces';
 import { Box, useBreakpointValue } from '@chakra-ui/react';
 import { RefObject, useEffect } from 'react';
@@ -54,6 +54,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   };
 
   const { colorMode } = useColorMode();
+  const color = useColorModeValue('#fdf6e3', '#272822');
   const isMobile = useBreakpointValue({ base: true, lg: false });
 
   useEffect(() => {
@@ -70,6 +71,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         style={{
           width: "100%",
           height: "100%",
+          backgroundColor: color,
           boxShadow: `
             0px 2px 4px color-mix(in srgb, black 64%, transparent),
             0px 0px 1px inset

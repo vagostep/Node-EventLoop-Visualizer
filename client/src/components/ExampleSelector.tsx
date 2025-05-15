@@ -1,6 +1,7 @@
 import { Portal, Select, SelectValueChangeDetails, Separator, createListCollection } from "@chakra-ui/react";
 import { groupBy } from "es-toolkit";
 import { useEffect, useState } from "react";
+import { useColorModeValue } from "./ui/color-mode";
 
 const examples = createListCollection({
   items: [
@@ -291,6 +292,9 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
   disabled,
 }) => {
   const [value, setValue] = useState<Array<string>>([]);
+  const backgroundIndicatorColor = useColorModeValue('#fbf1d3', '#151513');
+  const backgroundColor = useColorModeValue('#fdf6e3', '#151513');
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
 
   const _onValueChange = (
     details: SelectValueChangeDetails<ExampleSelectorValueChangeDetails>
@@ -320,21 +324,35 @@ const ExampleSelector: React.FC<ExampleSelectorProps> = ({
     >
       <Select.HiddenSelect />
       <Select.Control>
-        <Select.Trigger>
+        <Select.Trigger bg={backgroundColor}  _hover={{
+            border: "none"
+          }} _focus={{
+            border: "none",
+            outline: "none",
+            borderRadius: "0px"
+          }}
+          color={fontColor}>
           <Select.ValueText placeholder="Choose an Example" />
         </Select.Trigger>
-        <Select.IndicatorGroup>
+        <Select.IndicatorGroup bg={backgroundIndicatorColor} _hover={{
+            borderColor: "#e4e4e7"
+          }} _focus={{
+            outline: "none",
+            borderRadius: "0px"
+          }}>
           <Select.Indicator />
         </Select.IndicatorGroup>
       </Select.Control>
       <Portal>
         <Select.Positioner>
-          <Select.Content>
+          <Select.Content bg={backgroundColor} _hover={{
+            borderColor: "#e4e4e7"
+          }}>
             {levels.map(([level, items]) => (
               <div key={level}>
                 <Select.ItemGroup key={level}>
                   {items.map((item) => (
-                    <Select.Item item={item} key={item.id} textStyle={{ base: "xs", lg: "md" }}>
+                    <Select.Item item={item} key={item.id} textStyle={{ base: "xs", lg: "md" }} color={fontColor}>
                       {item.label}
                       <Select.ItemIndicator />
                     </Select.Item>

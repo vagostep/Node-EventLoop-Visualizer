@@ -1,4 +1,5 @@
 import { Button, CloseButton, Dialog, Link, List, Portal, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface MacroTaskQueueAboutDialogProps {
   onMacroTaskQueueAboutDialogClose: () => void
@@ -6,6 +7,10 @@ export interface MacroTaskQueueAboutDialogProps {
 const MacroTaskQueueAboutDialog: React.FC<MacroTaskQueueAboutDialogProps> = ({
   onMacroTaskQueueAboutDialogClose,
 }) => {
+
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+  const buttonBackgroundColor = useColorModeValue("#fbf1d3", "#1a1a1a");
+
   return (
     <Dialog.Root key="welcome-dialog" size="lg" open={true}>
       <Portal>
@@ -19,8 +24,8 @@ const MacroTaskQueueAboutDialog: React.FC<MacroTaskQueueAboutDialogProps> = ({
                 </Text>
               </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <p>
+            <Dialog.Body color={fontColor}>
+              <Text>
                 In Node.js, macrotasks are larger units of asynchronous work,
                 handled during specific{" "}
                 <Link
@@ -35,12 +40,12 @@ const MacroTaskQueueAboutDialog: React.FC<MacroTaskQueueAboutDialogProps> = ({
                 are run immediately after the current stack clears, macrotasks
                 are scheduled for specific phases and executed in their
                 respective queues.
-              </p>
+              </Text>
               <br />
-              <p>
+              <Text>
                 Each phase in the Node.js Event Loop has its own queue, and
                 Node.js processes one phase at a time in a continuous loop.
-              </p>
+              </Text>
               <br />
               <Text textStyle="2xl" textAlign="left" fontWeight="bold">
                 Queues
@@ -75,6 +80,15 @@ const MacroTaskQueueAboutDialog: React.FC<MacroTaskQueueAboutDialogProps> = ({
                 <Button
                   variant="outline"
                   onClick={onMacroTaskQueueAboutDialogClose}
+                  bg={buttonBackgroundColor}
+                  color={fontColor}
+                  _hover={{
+                    border: "none"
+                  }} _focus={{
+                    border: "none",
+                    outline: "none",
+                    borderRadius: "0px"
+                  }}
                 >
                   Close
                 </Button>
@@ -84,6 +98,15 @@ const MacroTaskQueueAboutDialog: React.FC<MacroTaskQueueAboutDialogProps> = ({
               <CloseButton
                 size="sm"
                 onClick={onMacroTaskQueueAboutDialogClose}
+                bg={buttonBackgroundColor}
+                color={fontColor}
+                _hover={{
+                  border: "none"
+                }} _focus={{
+                  border: "none",
+                  outline: "none",
+                  borderRadius: "0px"
+                }}
               />
             </Dialog.CloseTrigger>
           </Dialog.Content>

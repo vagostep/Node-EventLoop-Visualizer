@@ -1,4 +1,5 @@
 import { Button, CloseButton, Dialog, List, Portal, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface TicksAndRejectionsLoopStepperAboutDialogProps {
   onTicksAndRejectionsLoopStepperAboutDialogClose: () => void
@@ -6,21 +7,26 @@ export interface TicksAndRejectionsLoopStepperAboutDialogProps {
 const TicksAndRejectionsLoopStepperAboutDialog: React.FC<TicksAndRejectionsLoopStepperAboutDialogProps> = ({
   onTicksAndRejectionsLoopStepperAboutDialogClose,
 }) => {
+
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+  const buttonBackgroundColor = useColorModeValue("#fbf1d3", "#1a1a1a");
+  const backgroundColor = useColorModeValue('#fdf6e3', '#1a1a1a');
+
   return (
     <Dialog.Root key="welcome-dialog" size="lg" open={true}>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content paddingLeft="16px" paddingRight="16px">
+          <Dialog.Content paddingLeft="16px" paddingRight="16px" bg={backgroundColor}>
             <Dialog.Header>
-              <Dialog.Title>
+              <Dialog.Title bg={backgroundColor}>
                 <Text textStyle="3xl" textAlign="center" color="#339933">
                   Ticks & Rejections Loop!
                 </Text>
               </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <p>
+            <Dialog.Body color={fontColor} bg={backgroundColor}>
+              <Text>
                 The Ticks & Rejections Loop in Node.js is a crucial micro-phase
                 that runs between each phase of the main Event Loop. This loop
                 is responsible for handling next ticks and microtasks, ensuring
@@ -29,7 +35,7 @@ const TicksAndRejectionsLoopStepperAboutDialog: React.FC<TicksAndRejectionsLoopS
                 asynchronous, they are treated as extremely urgent, and they are
                 always executed before Node.js proceeds to the next phase of the
                 Event Loop.
-              </p>
+              </Text>
               <br />
               <Text textStyle="2xl" textAlign="left" fontWeight="bold">
                 Ticks vs Microtasks
@@ -57,6 +63,15 @@ const TicksAndRejectionsLoopStepperAboutDialog: React.FC<TicksAndRejectionsLoopS
                 <Button
                   variant="outline"
                   onClick={onTicksAndRejectionsLoopStepperAboutDialogClose}
+                  bg={buttonBackgroundColor}
+                  color={fontColor}
+                  _hover={{
+                    border: "none"
+                  }} _focus={{
+                    border: "none",
+                    outline: "none",
+                    borderRadius: "0px"
+                  }}
                 >
                   Close
                 </Button>
@@ -66,6 +81,15 @@ const TicksAndRejectionsLoopStepperAboutDialog: React.FC<TicksAndRejectionsLoopS
               <CloseButton
                 size="sm"
                 onClick={onTicksAndRejectionsLoopStepperAboutDialogClose}
+                bg={buttonBackgroundColor}
+                color={fontColor}
+                _hover={{
+                  border: "none"
+                }} _focus={{
+                  border: "none",
+                  outline: "none",
+                  borderRadius: "0px"
+                }}
               />
             </Dialog.CloseTrigger>
           </Dialog.Content>

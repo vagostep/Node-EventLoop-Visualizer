@@ -1,4 +1,5 @@
 import { Alert, Button, Checkbox, CloseButton, Dialog, Link, List, Portal, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface WelcomeDialogProps {
   onWelcomeDialogChecked: (checked: boolean) => void;
@@ -8,6 +9,10 @@ const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
   onWelcomeDialogChecked,
   onWelcomeDialogClose,
 }) => {
+
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+  const buttonBackgroundColor = useColorModeValue("#fbf1d3", "#1a1a1a");
+
   return (
     <Dialog.Root key="welcome-dialog" size="lg" open={true}>
       <Portal>
@@ -21,8 +26,8 @@ const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
                 </Text>
               </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <p>
+            <Dialog.Body color={fontColor}>
+              <Text>
                 This visualizer helps you understand how Node.js executes the{" "}
                 <Link
                   color="#339933"
@@ -34,9 +39,9 @@ const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
                 </Link>{" "}
                 while it interacts with your code, revealing the flow of
                 synchronous & asynchronous operations in action.
-              </p>
+              </Text>
               <br />
-              <p>
+              <Text>
                 Watch each{" "}
                 <Link
                   color="#339933"
@@ -49,7 +54,7 @@ const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
                 —timers, idle-prepare, pending callbacks, poll, check, close
                 callbacks, ticks & rejections— like never before. Understand the
                 execution order and how different tasks are queued and resolved.
-              </p>
+              </Text>
               <br />
               <Alert.Root status="warning">
                 <Alert.Indicator />
@@ -132,16 +137,26 @@ const WelcomeDialog: React.FC<WelcomeDialogProps> = ({
               >
                 <Checkbox.HiddenInput />
                 <Checkbox.Control />
-                <Checkbox.Label>Don't show this again</Checkbox.Label>
+                <Checkbox.Label color={fontColor}>Don't show this again</Checkbox.Label>
               </Checkbox.Root>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline" onClick={onWelcomeDialogClose}>
+                <Button 
+                  variant="outline" 
+                  onClick={onWelcomeDialogClose}
+                  bg={buttonBackgroundColor}
+                  color={fontColor}
+                >
                   Ok
                 </Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" onClick={onWelcomeDialogClose} />
+              <CloseButton 
+                size="sm" 
+                onClick={onWelcomeDialogClose} 
+                bg={buttonBackgroundColor}
+                color={fontColor}
+              />
             </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>
