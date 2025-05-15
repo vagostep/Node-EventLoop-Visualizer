@@ -13,6 +13,8 @@ This Node.js Event Loop Visualizer shows the phases that an Event Loop makes whe
 * Added a visualizer of the processTicksAndRejections loop
 * Added a "terminal" to print logs with an Ubuntu skin
 * New examples and descriptions
+* Toggle color mode
+* Performance metrics from libuv
 
 
 # Dependencies 
