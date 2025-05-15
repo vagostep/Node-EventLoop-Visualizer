@@ -72,11 +72,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           width: "100%",
           height: "100%",
           backgroundColor: color,
-          boxShadow: `
-            0px 2px 4px color-mix(in srgb, black 64%, transparent),
-            0px 0px 1px inset
-            color-mix(in srgb, var(--chakra-colors-gray-300) 30%, transparent)`,
+          boxShadow: `0.375rem`,
           lineHeight: isMobile ? "12px" : "16px",
+          borderRadius: "8px"
         }}
         focus={true}
         markers={markers?.map(({ start, end }, idx) => ({

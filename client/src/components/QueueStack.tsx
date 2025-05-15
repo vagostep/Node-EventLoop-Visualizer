@@ -73,7 +73,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
   }, [frames.length, isMobile, isMobileLandscape])
 
   return (
-    <Box height="100%" overflow="hidden" ref={ref} shadow="sm" >
+    <Box height="100%" overflow="hidden" ref={ref} shadow="sm" borderRadius="0.375rem" >
       <Card.Root height="100%" width="100%" bg={backgroundColor} overflow="hidden">
         <Card.Body overflow="hidden" padding="1rem" height="100%" width="100%" justifyContent="space-between">
           <Card.Title
