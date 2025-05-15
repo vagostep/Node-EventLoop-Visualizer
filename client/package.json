@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.15.0",
+    "@chakra-ui/react": "^3.18.0",
     "@csstools/normalize.css": "^12.1.1",
     "@emotion/react": "^11.14.0",
     "@types/styled-components": "^5.1.34",

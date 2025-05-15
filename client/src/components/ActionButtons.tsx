@@ -38,7 +38,7 @@ const ActionButtons: FC<ActionButtonsProps> = ({
                 }
           }
         >
-          <Icon size={{ base: "md", lg: "xl" }}>
+          <Icon size={{ base: "md", lg: "xl" }} color="#fff">
             {isAutoPlay ? <HiOutlinePause /> : <HiOutlineFastForward />}
           </Icon>
         </Button>
@@ -60,11 +60,11 @@ const ActionButtons: FC<ActionButtonsProps> = ({
             borderColor: "transparent",
           }}
         >
-          <Icon size={{ base: "md", lg: "2xl" }}>
+          <Icon size={{ base: "md", lg: "2xl" }} color="#fff">
             <HiOutlinePlay />
           </Icon>
 
-          <Text textStyle={{ base: "sm", lg: "xl" }} fontWeight="semibold">
+          <Text textStyle={{ base: "sm", lg: "xl" }} fontWeight="semibold" color="#fff">
             Step
           </Text>
         </Button>

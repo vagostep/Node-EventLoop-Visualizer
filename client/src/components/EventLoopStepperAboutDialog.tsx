@@ -1,4 +1,5 @@
 import { Button, CloseButton, Dialog, Link, List, Portal, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface EventLoopStepperAboutDialogProps {
   onEventLoopStepperAboutDialogClose: () => void
@@ -6,6 +7,10 @@ export interface EventLoopStepperAboutDialogProps {
 const EventLoopStepperAboutDialog: React.FC<EventLoopStepperAboutDialogProps> = ({
   onEventLoopStepperAboutDialogClose,
 }) => {
+
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+  const buttonBackgroundColor = useColorModeValue("#fbf1d3", "#1a1a1a");
+
   return (
     <Dialog.Root key="welcome-dialog" size="lg" open={true}>
       <Portal>
@@ -19,8 +24,8 @@ const EventLoopStepperAboutDialog: React.FC<EventLoopStepperAboutDialogProps> = 
                 </Text>
               </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <p>
+            <Dialog.Body color={fontColor}>
+              <Text>
                 The{" "}
                 <Link
                   color="#339933"
@@ -39,12 +44,12 @@ const EventLoopStepperAboutDialog: React.FC<EventLoopStepperAboutDialogProps> = 
                 the appropriate callback may be added to the poll queue to
                 eventually be executed. We'll explain this in further detail
                 later in this topic.
-              </p>
+              </Text>
               <br />
-              <p>
+              <Text>
                 Each phase in the Node.js Event Loop has its own queue, and
                 Node.js processes one phase at a time in a continuous loop.
-              </p>
+              </Text>
               <br />
               <Text textStyle="2xl" textAlign="left" fontWeight="bold">
                 Phases in Detail
@@ -60,7 +65,7 @@ const EventLoopStepperAboutDialog: React.FC<EventLoopStepperAboutDialogProps> = 
                   scheduling or the running of other callbacks may delay them.
                 </List.Item>
                 <br />
-                <List.Item>
+                <List.Item> 
                   <strong>Pending Callbacks</strong>: This phase executes
                   callbacks for some system operations such as types of TCP
                   errors. For example if a TCP socket receives ECONNREFUSED when
@@ -143,7 +148,16 @@ const EventLoopStepperAboutDialog: React.FC<EventLoopStepperAboutDialogProps> = 
               <Dialog.ActionTrigger asChild>
                 <Button
                   variant="outline"
+                  bg={buttonBackgroundColor}
+                  color={fontColor}
                   onClick={onEventLoopStepperAboutDialogClose}
+                  _hover={{
+                    border: "none"
+                  }} _focus={{
+                    border: "none",
+                    outline: "none",
+                    borderRadius: "0px"
+                  }}
                 >
                   Close
                 </Button>
@@ -152,7 +166,16 @@ const EventLoopStepperAboutDialog: React.FC<EventLoopStepperAboutDialogProps> = 
             <Dialog.CloseTrigger asChild>
               <CloseButton
                 size="sm"
+                bg={buttonBackgroundColor}
+                color={fontColor}
                 onClick={onEventLoopStepperAboutDialogClose}
+                _hover={{
+                  border: "none"
+                }} _focus={{
+                  border: "none",
+                  outline: "none",
+                  borderRadius: "0px"
+                }}
               />
             </Dialog.CloseTrigger>
           </Dialog.Content>

@@ -3,6 +3,7 @@ import { getPastelForIndex } from "@utils/colors";
 import React, { RefObject, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DELAY_TIME, UI_QUEUE_SIZES } from "../constants";
+import { useColorModeValue } from "./ui/color-mode";
 
 const MotionBox = motion.create(Box);
 
@@ -30,6 +31,9 @@ const QueueStack: React.FC<QueueStackProps> = ({
 }) => {
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const isMobileLandscape = useBreakpointValue({ base: false, sm: true, md: false });
+
+  const backgroundColor = useColorModeValue('#fdf6e3', '#333333');
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
 
   const isHorizontal = !!isMobile || orientation === "horizontal";
   const flexDirection = isHorizontal ? "row" : "column-reverse";
@@ -69,16 +73,16 @@ const QueueStack: React.FC<QueueStackProps> = ({
   }, [frames.length, isMobile, isMobileLandscape])
 
   return (
-    <Box height="100%" overflow="hidden" ref={ref}>
-      <Card.Root height="100%" width="100%" bg="#333333" shadow="sm" overflow="hidden">
+    <Box height="100%" overflow="hidden" ref={ref} shadow="sm" >
+      <Card.Root height="100%" width="100%" bg={backgroundColor} overflow="hidden">
         <Card.Body overflow="hidden" padding="1rem" height="100%" width="100%" justifyContent="space-between">
           <Card.Title
-            color="#fff"
+            color={fontColor}
             fontWeight="bold"
             marginBottom={titleMarginBottom}
           >
             <Flex justifyContent="space-between">
-              <Text textStyle={{ base: "md", sm: "xs", lg: "xl" }}>{title}</Text>
+              <Text textStyle={{ base: "md", sm: "xs", lg: "xl" }} color={fontColor}>{title}</Text>
               <Text
                 textStyle="xs"
                 color="#339933"
@@ -134,6 +138,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
                     <Text
                       textStyle={{ base: "xs", lg: "sm" }}
                       textAlign="center"
+                      color={fontColor}
                       textOverflow="ellipsis"
                       whiteSpace="nowrap"
                     >

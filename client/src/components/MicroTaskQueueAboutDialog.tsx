@@ -1,4 +1,5 @@
 import { Button, CloseButton, Dialog, List, Portal, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface MicroTaskQueueAboutDialogProps {
   onMicroTaskQueueAboutDialogClose: () => void
@@ -6,6 +7,10 @@ export interface MicroTaskQueueAboutDialogProps {
 const MicroTaskQueueAboutDialog: React.FC<MicroTaskQueueAboutDialogProps> = ({
   onMicroTaskQueueAboutDialogClose,
 }) => {
+
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+  const buttonBackgroundColor = useColorModeValue("#fbf1d3", "#1a1a1a");
+
   return (
     <Dialog.Root key="welcome-dialog" size="lg" open={true}>
       <Portal>
@@ -19,13 +24,13 @@ const MicroTaskQueueAboutDialog: React.FC<MicroTaskQueueAboutDialogProps> = ({
                 </Text>
               </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <p>
+            <Dialog.Body color={fontColor}>
+              <Text>
                 The Microtask Queue in Node.js is a special queue used to manage
                 microtasks — small units of work that are scheduled to run
                 immediately after the current operation completes, before the
                 event loop moves to the next phase.
-              </p>
+              </Text>
               <br />
               <Text textStyle="2xl" textAlign="left" fontWeight="bold">
                 Microtasks include:
@@ -49,6 +54,15 @@ const MicroTaskQueueAboutDialog: React.FC<MicroTaskQueueAboutDialogProps> = ({
                 <Button
                   variant="outline"
                   onClick={onMicroTaskQueueAboutDialogClose}
+                  bg={buttonBackgroundColor}
+                  color={fontColor}
+                  _hover={{
+                    border: "none"
+                  }} _focus={{
+                    border: "none",
+                    outline: "none",
+                    borderRadius: "0px"
+                  }}
                 >
                   Close
                 </Button>
@@ -58,6 +72,15 @@ const MicroTaskQueueAboutDialog: React.FC<MicroTaskQueueAboutDialogProps> = ({
               <CloseButton
                 size="sm"
                 onClick={onMicroTaskQueueAboutDialogClose}
+                bg={buttonBackgroundColor}
+                color={fontColor}
+                _hover={{
+                  border: "none"
+                }} _focus={{
+                  border: "none",
+                  outline: "none",
+                  borderRadius: "0px"
+                }}
               />
             </Dialog.CloseTrigger>
           </Dialog.Content>

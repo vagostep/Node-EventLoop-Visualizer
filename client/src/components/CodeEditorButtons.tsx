@@ -1,4 +1,4 @@
-import { Button, Text } from "@chakra-ui/react";
+import { Button, Icon, Text } from "@chakra-ui/react";
 import React, { MouseEventHandler } from "react";
 import { AiOutlineSend } from "react-icons/ai";
 import { HiOutlineCode } from "react-icons/hi";
@@ -16,6 +16,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
   onButtonEditClick,
   onButtonRunClick,
 }) => {
+
   return (
     <>
       {!isEditMode && !isLoading ? (
@@ -31,9 +32,16 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
             bg: "#f5bc75",
             borderColor: "transparent",
           }}
+          _focus={{
+            outline: "none",
+            borderRadius: "0px"
+          }}
         >
-          <HiOutlineCode />
-          <Text textStyle={{ base: "xs", lg: "lg" }} fontWeight="semibold">
+          <Icon size={{ base: "md", lg: "xl" }} color="#fff">
+            <HiOutlineCode />
+          </Icon>
+          
+          <Text textStyle={{ base: "xs", lg: "lg" }} fontWeight="semibold" color="#fff">
             Edit
           </Text>
         </Button>
@@ -43,7 +51,7 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
           variant="surface"
           bg="#339933"
           borderRadius="0px"
-          shadow="sm"
+          shadow="md"
           onClick={onButtonRunClick}
           loading={isLoading}
           spinnerPlacement="start"
@@ -52,10 +60,14 @@ const CodeEditorButtons: React.FC<CodeEditorButtonsProps> = ({
             bg: "#99cc7d",
             borderColor: "transparent",
           }}
+          _focus={{
+            outline: "none",
+            borderRadius: "0px"
+          }}
         >
-          <AiOutlineSend fontWeight="semibold" />
+          <AiOutlineSend fontWeight="semibold" color="#fff" />
           {!isLoading ? (
-            <Text textStyle={{ base: "xs", lg: "lg" }} fontWeight="semibold">
+            <Text textStyle={{ base: "xs", lg: "lg" }} fontWeight="semibold" color="#fff">
               Run
             </Text>
           ) : (

@@ -7,7 +7,6 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #1a1a1a;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -116,4 +115,18 @@ button:focus-visible {
 
 .ace_read-only {
   pointer-events: none;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    background-color: #fdf6e3;
+    color: #1a1a1a; 
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-color: #1a1a1a;
+    color: #ffffff;            
+  }
 }

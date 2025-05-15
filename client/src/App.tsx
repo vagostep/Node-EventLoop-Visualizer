@@ -22,6 +22,9 @@ import ExampleController from '@components/ExampleController';
 import Metrics from '@components/Metrics';
 import { delay } from '@utils/delay';
 import MetricsAboutDialog from '@components/MetricsAboutDialog';
+import GithubCorner from '@components/GithubCorner';
+import ColorModeCorner from '@components/ColorModeCorner';
+import { useColorMode, useColorModeValue } from '@components/ui/color-mode';
 
 const eventLoopSteps: Array<Step> = [
   {
@@ -123,6 +126,8 @@ const ticksAndRejectionsSteps: Array<Step> = [
 function App() {
 
   const isMobile = useBreakpointValue({ base: true, lg: false });
+  const backgroundColor = useColorModeValue('#fdf6e3', '#1a1a1a');
+  const { colorMode } = useColorMode();
 
   const callStackComponentRef = useRef<HTMLDivElement>(null);
   const terminalComponentRef = useRef<HTMLDivElement>(null);
@@ -180,6 +185,9 @@ function App() {
       setIsWelcomeDialogOpen(true);
     }
   }, []);
+  useEffect(() => {
+    localStorage.setItem('theme', colorMode);
+  }, [colorMode]);
 
   const onWelcomeDialogChecked = (checked: boolean) => {
     localStorage.setItem("hideWelcomeDialog", `${checked}`);
@@ -513,186 +521,191 @@ function App() {
   };
 
   return (
-    <Container padding={{ base: "0px", md: "16px"}} height="100dvh">
-      {isWelcomeDialogOpen && (
-        <WelcomeDialog
-          onWelcomeDialogChecked={onWelcomeDialogChecked}
-          onWelcomeDialogClose={() => setIsWelcomeDialogOpen(false)}
-        />
-      )}
-      {isCallStackAboutDialogOpen && (
-        <CallStackAboutDialog
-          onCallStackAboutDialogClose={() =>
-            setIsCallStackAboutDialogOpen(false)
-          }
-        />
-      )}
-      {isMicrotaskQueueAboutDialogOpen && (
-        <MicroTaskQueueAboutDialog
-          onMicroTaskQueueAboutDialogClose={() => {
-            setIsMicrotaskQueueAboutDialogOpen(false);
+    <Box backgroundColor={backgroundColor}>
+      <GithubCorner />
+      <ColorModeCorner />
+      <Container padding={{ base: "0px", md: "16px"}} height={{ base: "auto", lg: "100dvh" }} backgroundColor={backgroundColor}>
+        {isWelcomeDialogOpen && (
+          <WelcomeDialog
+            onWelcomeDialogChecked={onWelcomeDialogChecked}
+            onWelcomeDialogClose={() => setIsWelcomeDialogOpen(false)}
+          />
+        )}
+        {isCallStackAboutDialogOpen && (
+          <CallStackAboutDialog
+            onCallStackAboutDialogClose={() =>
+              setIsCallStackAboutDialogOpen(false)
+            }
+          />
+        )}
+        {isMicrotaskQueueAboutDialogOpen && (
+          <MicroTaskQueueAboutDialog
+            onMicroTaskQueueAboutDialogClose={() => {
+              setIsMicrotaskQueueAboutDialogOpen(false);
+            }}
+          />
+        )}
+        {isMacrotaskQueueAboutDialogOpen && (
+          <MacroTaskQueueAboutDialog
+            onMacroTaskQueueAboutDialogClose={() => {
+              setIsMacrotaskQueueAboutDialogOpen(false);
+            }}
+          />
+        )}
+        {isEventLoopStepperAboutDialogOpen && (
+          <EventLoopStepperAboutDialog
+            onEventLoopStepperAboutDialogClose={() => {
+              setIsEventLoopStepperAboutDialogOpen(false);
+            }}
+          />
+        )}
+        {isTicksAndRejectionsStepperAboutDialogOpen && (
+          <TicksAndRejectionsLoopStepperAboutDialog
+            onTicksAndRejectionsLoopStepperAboutDialogClose={() => {
+              setIsTicksAndRejectionsStepperAboutDialogOpen(false);
+            }}
+          />
+        )}
+        {isMetricsAboutDialogOpen && (
+          <MetricsAboutDialog
+          onMetricsAboutDialogClose={() => {
+            setIsMetricsAboutDialogOpen(false);
           }}
         />
-      )}
-      {isMacrotaskQueueAboutDialogOpen && (
-        <MacroTaskQueueAboutDialog
-          onMacroTaskQueueAboutDialogClose={() => {
-            setIsMacrotaskQueueAboutDialogOpen(false);
-          }}
-        />
-      )}
-      {isEventLoopStepperAboutDialogOpen && (
-        <EventLoopStepperAboutDialog
-          onEventLoopStepperAboutDialogClose={() => {
-            setIsEventLoopStepperAboutDialogOpen(false);
-          }}
-        />
-      )}
-      {isTicksAndRejectionsStepperAboutDialogOpen && (
-        <TicksAndRejectionsLoopStepperAboutDialog
-          onTicksAndRejectionsLoopStepperAboutDialogClose={() => {
-            setIsTicksAndRejectionsStepperAboutDialogOpen(false);
-          }}
-        />
-      )}
-      {isMetricsAboutDialogOpen && (
-        <MetricsAboutDialog
-        onMetricsAboutDialogClose={() => {
-          setIsMetricsAboutDialogOpen(false);
-        }}
-      />
-      )}
-      <Toaster />
-      <Grid templateColumns={{ base: "1fr", lg: "35% 65%" }} height="100%">
-        <Grid 
-          templateRows={{ base: "8% 5% 5% 50% 32%", lg: "6% 4% 5% 50% 35%" }}
-          height={{ base: "800px", lg: "100%" }}
-          width="100%"
-        >
-          <Box padding="8px">
-            <Branding ref={brandingComponentRef} />
-          </Box>
-          <Box padding="8px">
-            <Attributions />
-          </Box>
-          <Box padding="8px">
-            <ExampleController 
-              onValueChange={onExampleSelectorValueChange}
-              isEditMode={isEditMode}
-              isLoading={isLoading}
-              onButtonEditClick={onButtonEditClick}
-              onButtonRunClick={onButtonRunClick}
-            />
-          </Box>
-          <Box padding="8px">
-            <CodeEditor
-              code={code}
-              isEditMode={isEditMode}
-              onChangeCode={onChangeCode}
-              markers={markers}
-            />
-          </Box>
-          <Box padding="8px">
-            <Terminal
-              ref={terminalComponentRef}
-              outputs={outputs}
-              isRunning={!isLoading && !isEditMode}
-            />
-          </Box>
-        </Grid>
-        <Grid 
-          templateRows={{ base: "372px auto", lg: "30% 70%" }}
-          height="100%"
-          width="100%"
-        >
+        )}
+        <Toaster />
+        <Grid templateColumns={{ base: "1fr", lg: "35% 65%" }} height="100%">
           <Grid 
-            templateColumns={{ base: "none", lg: "calc(calc(100% / 3) * 2) auto" }}
-            templateRows={{ base: "144px 228px", lg: "none" }}
-            height="100%"
-            maxHeight={{ base: "400px", lg: "none" }}
-            flexDirection={{ base: "column", lg: "row" }}
+            templateRows={{ base: "8% 5% 5% 50% 32%", lg: "6% 4% 5% 50% 35%" }}
+            height={{ base: "800px", lg: "100%" }}
+            width="100%"
           >
-            <Grid
-              templateRows={{ base: "114px 114px", lg: "50% 50%" }}
-              height="100%"
-              maxHeight={{ base: "228px", lg: "none" }}
-              order={{ base: 2, lg: 1 }}
-            >
-              <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }}>
-                <QueueStack
-                  ref={macroTaskQueueComponentRef}
-                  orientation="horizontal"
-                  title="Macrotask Queue"
-                  frames={macroTasks}
-                  onAboutClick={() => onAboutClick("macrotaskqueue")}
-                />
-              </Box>
-              <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }}>
-                <QueueStack
-                  ref={microTaskQueueComponentRef}
-                  orientation="horizontal"
-                  title="Microtask Queue"
-                  frames={microTasks}
-                  onAboutClick={() => onAboutClick("microtaskqueue")}
-                />
-              </Box>
-            </Grid>
-            <Grid 
-              height="100%" 
-              order={{ base: 1, lg: 2 }}
-              maxHeight={{ base: "120px", lg: "none" }}
-            >
-              <Box padding="8px">
-                <Metrics onAboutClick={() => onAboutClick("metrics")} metrics={metrics}></Metrics>
-              </Box>
-            </Grid>
+            <Box padding="8px" backgroundColor={backgroundColor}>
+              <Branding ref={brandingComponentRef} />
+            </Box>
+            <Box padding="8px">
+              <Attributions />
+            </Box>
+            <Box padding="8px" backgroundColor={backgroundColor}>
+              <ExampleController 
+                onValueChange={onExampleSelectorValueChange}
+                isEditMode={isEditMode}
+                isLoading={isLoading}
+                onButtonEditClick={onButtonEditClick}
+                onButtonRunClick={onButtonRunClick}
+              />
+            </Box>
+            <Box padding="8px" backgroundColor={backgroundColor}>
+              <CodeEditor
+                code={code}
+                isEditMode={isEditMode}
+                onChangeCode={onChangeCode}
+                markers={markers}
+              />
+            </Box>
+            <Box padding="8px" backgroundColor={backgroundColor}>
+              <Terminal
+                ref={terminalComponentRef}
+                outputs={outputs}
+                isRunning={!isLoading && !isEditMode}
+              />
+            </Box>
           </Grid>
-          <Grid
-            templateColumns={{ base: "none", lg: "repeat(3, 1fr)" }}
-            templateRows={{ base: "114px auto auto", lg: "none" }}
-            maxHeight={{ base: "430px", lg: "none" }}
+          <Grid 
+            templateRows={{ base: "372px auto", lg: "30% 70%" }}
             height="100%"
+            width="100%"
           >
-            <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }}>
-              <QueueStack
-                ref={callStackComponentRef}
-                orientation="vertical"
-                title="Call Stack"
-                frames={callStack}
-                onAboutClick={() => onAboutClick("callstack")}
-              />
-            </Box>
-            <Box padding="8px">
-              <Stepper
-                ref={eventLoopComponentRef}
-                title="Event Loop"
-                steps={eventLoopSteps}
-                activeStep={eventLoopActiveStep}
-                onAboutClick={() => onAboutClick("eventloop")}
-              />
-            </Box>
-            <Box padding="8px">
-              <Stepper
-                ref={ticksAndRejectionsLoopComponentRef}
-                title="Ticks & Rejections"
-                steps={ticksAndRejectionsSteps}
-                activeStep={ticksAndRejectionsActiveStep}
-                onAboutClick={() => onAboutClick("ticksandrejectionsloop")}
-              />
-            </Box>
+            <Grid 
+              templateColumns={{ base: "none", lg: "calc(calc(100% / 3) * 2) auto" }}
+              templateRows={{ base: "144px 228px", lg: "none" }}
+              height="100%"
+              maxHeight={{ base: "400px", lg: "none" }}
+              flexDirection={{ base: "column", lg: "row" }}
+            >
+              <Grid
+                templateRows={{ base: "114px 114px", lg: "50% 50%" }}
+                height="100%"
+                maxHeight={{ base: "228px", lg: "none" }}
+                order={{ base: 2, lg: 1 }}
+              >
+                <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }} backgroundColor={backgroundColor}>
+                  <QueueStack
+                    ref={macroTaskQueueComponentRef}
+                    orientation="horizontal"
+                    title="Macrotask Queue"
+                    frames={macroTasks}
+                    onAboutClick={() => onAboutClick("macrotaskqueue")}
+                  />
+                </Box>
+                <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }} backgroundColor={backgroundColor}>
+                  <QueueStack
+                    ref={microTaskQueueComponentRef}
+                    orientation="horizontal"
+                    title="Microtask Queue"
+                    frames={microTasks}
+                    onAboutClick={() => onAboutClick("microtaskqueue")}
+                  />
+                </Box>
+              </Grid>
+              <Grid 
+                height="100%" 
+                order={{ base: 1, lg: 2 }}
+                maxHeight={{ base: "120px", lg: "none" }}
+              >
+                <Box padding="8px" backgroundColor={backgroundColor}>
+                  <Metrics onAboutClick={() => onAboutClick("metrics")} metrics={metrics}></Metrics>
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid
+              templateColumns={{ base: "none", lg: "repeat(3, 1fr)" }}
+              templateRows={{ base: "114px auto auto", lg: "none" }}
+              maxHeight={{ base: "430px", lg: "none" }}
+              height="100%"
+            >
+              <Box padding="8px" maxHeight={{ base: "114px", lg: "none" }} backgroundColor={backgroundColor}>
+                <QueueStack
+                  ref={callStackComponentRef}
+                  orientation="vertical"
+                  title="Call Stack"
+                  frames={callStack}
+                  onAboutClick={() => onAboutClick("callstack")}
+                />
+              </Box>
+              <Box padding="8px" backgroundColor={backgroundColor}>
+                <Stepper
+                  ref={eventLoopComponentRef}
+                  title="Event Loop"
+                  steps={eventLoopSteps}
+                  activeStep={eventLoopActiveStep}
+                  onAboutClick={() => onAboutClick("eventloop")}
+                />
+              </Box>
+              <Box padding="8px" backgroundColor={backgroundColor}>
+                <Stepper
+                  ref={ticksAndRejectionsLoopComponentRef}
+                  title="Ticks & Rejections"
+                  steps={ticksAndRejectionsSteps}
+                  activeStep={ticksAndRejectionsActiveStep}
+                  onAboutClick={() => onAboutClick("ticksandrejectionsloop")}
+                />
+              </Box>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      {!isEditMode && !isLoading ? (
-        <ActionButtons
-          onPlayNextEvent={onPlayNextEvent}
-          onAutoplayNextEvent={onAutoplayNextEvent}
-          isAutoPlay={isAutoPlay}
-        />
-      ) : (
-        <></>
-      )}
-    </Container>
+        {!isEditMode && !isLoading ? (
+          <ActionButtons
+            onPlayNextEvent={onPlayNextEvent}
+            onAutoplayNextEvent={onAutoplayNextEvent}
+            isAutoPlay={isAutoPlay}
+          />
+        ) : (
+          <></>
+        )}
+      </Container>
+    </Box>
+    
   );
 }
 

@@ -1,4 +1,5 @@
 import { Button, CloseButton, Dialog, Link, List, Portal, Text } from "@chakra-ui/react";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface CallStackAboutDialogProps {
   onCallStackAboutDialogClose: () => void
@@ -6,6 +7,10 @@ export interface CallStackAboutDialogProps {
 const CallStackAboutDialog: React.FC<CallStackAboutDialogProps> = ({
   onCallStackAboutDialogClose,
 }) => {
+
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+  const buttonBackgroundColor = useColorModeValue("#fbf1d3", "#1a1a1a");
+
   return (
     <Dialog.Root key="welcome-dialog" size="lg" open={true}>
       <Portal>
@@ -19,8 +24,8 @@ const CallStackAboutDialog: React.FC<CallStackAboutDialogProps> = ({
                 </Text>
               </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <p>
+            <Dialog.Body color={fontColor}>
+              <Text>
                 The{" "}
                 <Link
                   color="#339933"
@@ -35,7 +40,7 @@ const CallStackAboutDialog: React.FC<CallStackAboutDialogProps> = ({
                 track of function calls in a program. It operates as a Last In,
                 First Out (LIFO) data structure, meaning that the last function
                 called is the first one to be resolved.
-              </p>
+              </Text>
               <br />
               <Text textStyle="2xl" textAlign="left" fontWeight="bold">
                 How It Works?
@@ -73,13 +78,37 @@ const CallStackAboutDialog: React.FC<CallStackAboutDialogProps> = ({
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline" onClick={onCallStackAboutDialogClose}>
+                <Button 
+                  variant="outline" 
+                  onClick={onCallStackAboutDialogClose}
+                  bg={buttonBackgroundColor}
+                  color={fontColor}
+                  _hover={{
+                    border: "none"
+                  }} _focus={{
+                    border: "none",
+                    outline: "none",
+                    borderRadius: "0px"
+                  }}
+                >
                   Close
                 </Button>
               </Dialog.ActionTrigger>
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" onClick={onCallStackAboutDialogClose} />
+              <CloseButton 
+                size="sm" 
+                onClick={onCallStackAboutDialogClose}                 
+                bg={buttonBackgroundColor}
+                color={fontColor} 
+                _hover={{
+                  border: "none"
+                }} _focus={{
+                  border: "none",
+                  outline: "none",
+                  borderRadius: "0px"
+                }}
+              />
             </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>

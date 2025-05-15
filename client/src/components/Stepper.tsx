@@ -1,6 +1,7 @@
 import { Card, Flex, Steps, Text } from "@chakra-ui/react";
 import React, { RefObject } from "react";
 import { LuCheck } from "react-icons/lu";
+import { useColorModeValue } from "./ui/color-mode";
 
 export interface Step {
   id: number;
@@ -18,6 +19,9 @@ export interface StepperProps {
 
 const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, ref, steps = [] }) => {
 
+  const backgroundColor = useColorModeValue('#fdf6e3', '#333333');
+  const fontColor = useColorModeValue('#1a1a1a', '#ffffff');
+
   const getIndicatorBackgroundColor = (index: number) => {
     const activeStepId = steps?.find((step) => step.name === activeStep)?.id || 0;
 
@@ -34,14 +38,15 @@ const Stepper: React.FC<StepperProps> = ({ title, activeStep, onAboutClick, ref,
     }
   }
   return (
-    <Card.Root height="100%" width="100%" bg="#333333" shadow="sm" ref={ref}>
+    <Card.Root height="100%" width="100%" bg={backgroundColor} shadow="sm" ref={ref}>
       <Card.Body padding="1rem">
-        <Card.Title color="#fff" fontWeight="bold" fontSize="20px">
+        <Card.Title color={fontColor} fontWeight="bold" fontSize="20px">
           <Flex justifyContent="space-between">
             <Text textStyle={{ base: "md", sm: "xs", lg: "xl" }}>{title}</Text>
             <Text
               textStyle="xs"
               color="#339933"
+              fontWeight="bolder"
               mt="8px"
               _hover={{
                 color: "#66cc33",
