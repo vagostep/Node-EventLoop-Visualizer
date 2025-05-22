@@ -117,9 +117,13 @@ console.log('end');
     {
       label: "File System",
       value: `
-fs.readFile('file.js', 'utf-8', function readFile1(data, error) {
+fs.readFile(function readFile1(data, error) {
   console.log('readFile 1');
 });
+
+console.log('log 1');
+fs.readFileSync();
+console.log('log 2');
 `.trim(),
       level: "Intermediate",
       id: 4,

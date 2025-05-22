@@ -4,3 +4,4 @@ Dockerfile
 .dockerignore
 .git
 .gitignore
+file.txt

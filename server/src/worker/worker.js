@@ -43,6 +43,8 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
+const fakeFilePath = path.join(__dirname, 'file.txt');
+console.log(fakeFilePath)
 const context = {
   nextId,
   Tracer,
@@ -58,7 +60,14 @@ const context = {
   queueMicrotask,
   __filename,
   fs: {
-    readFile: fs.readFile,
+    readFile: (callback) => {
+
+      return fs.readFile(fakeFilePath, 'utf8', callback);
+    },
+    readFileSync: () => {
+
+      return fs.readFileSync(fakeFilePath, 'utf8');
+    },
   },
   process: {
     nextTick: process.nextTick,
