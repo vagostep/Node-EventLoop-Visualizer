@@ -138,7 +138,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
                     <Text
                       textStyle={{ base: "xs", lg: "sm" }}
                       textAlign="center"
-                      color={fontColor}
+                      color="#1a1a1a"
                       textOverflow="ellipsis"
                       whiteSpace="nowrap"
                     >
