@@ -37,4 +37,3 @@ dist-ssr
 
 .env.local
 .env.production
-file.txt
