@@ -7,6 +7,23 @@ const traverse = require("@babel/traverse").default;
 const parser = require("@babel/parser");
 const vm = require("node:vm");
 const t = require("@babel/types");
+const EventEmitterBase = require("node:events");
+const { Readable: ReadableBase } = require("node:stream");
+
+class MyOwnEvent {
+  constructor() {
+    this._emitter = new EventEmitterBase();
+  }
+
+  // Copiamos los métodos on y emit del EventEmitter original
+  on(...args) {
+    return this._emitter.on(...args);
+  }
+
+  emit(...args) {
+    return this._emitter.emit(...args);
+  }
+}
 
 const fetch = require("node-fetch");
 
@@ -44,7 +61,7 @@ process.on("uncaughtException", (err) => {
 });
 
 const fakeFilePath = path.join(__dirname, 'file.txt');
-console.log(fakeFilePath)
+
 const context = {
   nextId,
   Tracer,
@@ -59,19 +76,53 @@ const context = {
   setImmediate,
   queueMicrotask,
   __filename,
-  fs: {
-    readFile: (callback) => {
+  fs: new Proxy({}, {
+    get(target, prop) {
+      if (prop === 'readFile') {
+        return (callback) => fs.readFile(fakeFilePath, 'utf8', callback);
+      }
 
-      return fs.readFile(fakeFilePath, 'utf8', callback);
-    },
-    readFileSync: () => {
+      if (prop === 'readFileSync') {
+        return (callback) => fs.readFileSync(fakeFilePath, 'utf8');
+      }
 
-      return fs.readFileSync(fakeFilePath, 'utf8');
+      if (prop === 'createReadStream') {
+        const stream = fs.createReadStream(fakeFilePath, { encoding: 'utf8' });
+
+        // Proxy que solo permite el método `on`
+        return new Proxy({}, {
+          get(target, prop) {
+            if (prop === 'on') return stream.on.bind(stream);
+            // Bloquear acceso a otros métodos/properties
+            return undefined;
+          },
+          set() {
+            // Evita modificaciones
+            return false;
+          }
+        });
+      }
+
+      return undefined;
     },
-  },
-  process: {
-    nextTick: process.nextTick,
-  },
+    set() {
+      // No permitir asignaciones
+      return false;
+    }
+  }),
+  process: new Proxy({}, {
+    get(target, prop) {
+      if (prop === "nextTick") {
+        return process.nextTick;
+      }
+
+      return undefined;
+    },
+    set() {
+      // No permitir asignaciones
+      return false;
+    }
+  }),
   http: {
     createServer: (callback) => {
 
@@ -123,6 +174,26 @@ const context = {
   },
   fetch,
   JSON,
+  EventEmitter: MyOwnEvent,
+  Readable: {
+    from: (source) => {
+
+      const stream = ReadableBase.from(source);
+
+      // Proxy que solo permite el método `on`
+      return new Proxy({}, {
+        get(target, prop) {
+          if (prop === 'on') return stream.on.bind(stream);
+          // Bloquear acceso a otros métodos/properties
+          return undefined;
+        },
+        set() {
+          // Evita modificaciones
+          return false;
+        }
+      });
+    }
+  }
 };
 
 const code = process.argv.slice(2)?.[0];

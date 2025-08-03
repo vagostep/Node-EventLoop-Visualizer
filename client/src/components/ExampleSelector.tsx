@@ -139,6 +139,36 @@ setImmediate(function immediate1() {
       id: 5,
     },
     {
+      label: "Events",
+      value: `const eventEmitter = new EventEmitter();
+
+// Register an event handler
+eventEmitter.on('greet', () => {
+  console.log('Hello! An event has been triggered.');
+});
+
+// Emit the 'greet' event
+eventEmitter.emit('greet');
+`.trim(),
+      level: "Easy",
+      id: 6
+    },
+    {
+      label: "Streams",
+      value: `
+const readStream = fs.createReadStream();
+
+readStream.on('data', chunk => {
+  console.log('Chunk recibido:', chunk);
+});
+
+readStream.on('end', () => {
+  console.log('Stream has ended');
+});`.trim(),
+      level: "Easy",
+      id: 7
+    },
+    {
       label: "Micro Tasks",
       value: `
 function microTaskQueued() {
@@ -166,7 +196,7 @@ queueMicrotask(microTaskQueued);
 Promise.reject().catch(promiseRejected);
 `.trim(),
       level: "Intermediate",
-      id: 6,
+      id: 8,
     },
     {
       label: "Nested Ticks",
@@ -202,7 +232,7 @@ process.nextTick(function nextTick2() {
 });
 `.trim(),
       level: "Intermediate",
-      id: 7,
+      id: 9,
     },
     {
       label: "Sockets",
@@ -236,7 +266,7 @@ server.listen(() => {
 });
 `.trim(),
       level: "Advanced",
-      id: 8,
+      id: 10,
     },
     {
       label: "Http Server",
@@ -273,7 +303,7 @@ server.listen(() => {
 });
 `.trim(),
       level: "Advanced",
-      id: 9,
+      id: 11,
     },
   ],
 });
