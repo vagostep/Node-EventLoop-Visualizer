@@ -35,5 +35,4 @@ dist-ssr
 *.sln
 *.sw?
 
-.env.local
-.env.production
+*.env*

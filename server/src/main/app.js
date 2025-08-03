@@ -34,6 +34,11 @@ app.post('/execute-code', async (req, res) => {
   res.status(200).json(reducedRequest);
 })
 
+const getTransformedMessageConsoleLine = (text) => {
+  
+  return text?.split("Message:")?.[1]?.trim()?.replace(/^'|'$/g, '');;
+}
+
 const getTransformedMessageLine = (text) => {
   return text?.split(":")?.[1]?.trim()?.replaceAll("'", "");
 };
@@ -80,7 +85,7 @@ function processRequest(req) {
                     type === "ConsoleWarn" ||
                     type === "ConsoleError"
                   ) {
-                    message = getTransformedMessageLine(match[1]);
+                    message = getTransformedMessageConsoleLine(match[1]);
                   } else {
                     funcId = getTransformedMessageLine(match[1]);
                   }
@@ -126,7 +131,7 @@ function processRequest(req) {
       activeChildProcess.stdout.pipe(lineStream);
 
       activeChildProcess.stderr.on("data", (data) => {
-        // console.log("STDERR: ", data.toString());
+        console.log("STDERR: ", data.toString());
         reject(data.toString());
       });
 
@@ -169,7 +174,7 @@ function processRequest(req) {
 }
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`server running on http://localhost:${PORT}`);
 });
 
 const reduceTicksAndRejectionsNonTriggeredByCallbackCycles = (reduceEvents) => {
