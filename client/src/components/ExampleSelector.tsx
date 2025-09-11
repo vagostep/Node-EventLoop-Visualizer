@@ -115,6 +115,18 @@ console.log('end');
       id: 3,
     },
     {
+      label: "Crypto",
+      value: `
+function pbkdf2Callback(derivedKey) {
+  console.log("key (hex):", derivedKey.toString("hex"));
+}
+
+crypto.pbkdf2("password", pbkdf2Callback);
+`.trim(),
+      level: "Intermediate",
+      id: 4,
+    },
+    {
       label: "File System",
       value: `
 fs.readFile(function readFile1(data, error) {
@@ -126,7 +138,7 @@ fs.readFileSync();
 console.log('log 2');
 `.trim(),
       level: "Intermediate",
-      id: 4,
+      id: 5,
     },
     {
       label: "Immediate",
@@ -136,7 +148,7 @@ setImmediate(function immediate1() {
 });
 `.trim(),
       level: "Easy",
-      id: 5,
+      id: 6,
     },
     {
       label: "Events",
@@ -151,7 +163,7 @@ eventEmitter.on('greet', () => {
 eventEmitter.emit('greet');
 `.trim(),
       level: "Easy",
-      id: 6
+      id: 7
     },
     {
       label: "Streams",
@@ -166,7 +178,7 @@ readStream.on('end', () => {
   console.log('Stream has ended');
 });`.trim(),
       level: "Easy",
-      id: 7
+      id: 8
     },
     {
       label: "Micro Tasks",
@@ -196,7 +208,7 @@ queueMicrotask(microTaskQueued);
 Promise.reject().catch(promiseRejected);
 `.trim(),
       level: "Intermediate",
-      id: 8,
+      id: 9,
     },
     {
       label: "Nested Ticks",
@@ -232,7 +244,7 @@ process.nextTick(function nextTick2() {
 });
 `.trim(),
       level: "Intermediate",
-      id: 9,
+      id: 10,
     },
     {
       label: "Sockets",
@@ -266,7 +278,7 @@ server.listen(() => {
 });
 `.trim(),
       level: "Advanced",
-      id: 10,
+      id: 11,
     },
     {
       label: "Http Server",
@@ -303,7 +315,7 @@ server.listen(() => {
 });
 `.trim(),
       level: "Advanced",
-      id: 11,
+      id: 12,
     },
   ],
 });

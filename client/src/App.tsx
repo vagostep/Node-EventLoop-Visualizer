@@ -273,9 +273,9 @@ function App() {
         callStackComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }      
-      setCallStack((prev) => [...prev, { name: name }]);
+      setCallStack((prev) => [...prev, { name: payload.name }]);
 
-      setMarkers((prev) => [...prev, { start, end }]);
+      setMarkers((prev) => [...prev, { start: payload.start, end: payload.end }]);
     }
 
     const exitFunctionHandler = async () => {
@@ -298,6 +298,25 @@ function App() {
       setMarkers(updatedMarkers);
     }
 
+    const enqueueMicrotasksHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        microTaskQueueComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        microTaskQueueComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+
+      console.log('Payloads', payloads)
+      payloads?.forEach(({ funcId, name }) => {
+        const microTask = {
+          id: funcId,
+          name: name,
+        };
+        setMicroTasks((prev) => [...prev, microTask]);
+      })
+    }
+
+    // @deprecated
     const enqueueMicrotaskHandler = async () => {
       if (isMobile) {
         isAutoPlay && await delay(DELAY_TIME);
@@ -306,8 +325,8 @@ function App() {
         isAutoPlay && await delay(DELAY_TIME);
       }      
       const microTask = {
-        id: funcId,
-        name: name,
+        id: payload.funcId,
+        name: payload.name,
       };
       setMicroTasks((prev) => [...prev, microTask]);
     }
@@ -319,13 +338,31 @@ function App() {
         microTaskQueueComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }      
-      const id = funcId;
+      const id = payload.funcId;
       const updatedMicrotasks = microTasks?.filter(
         (microTask) => microTask.id !== id
       );
       setMicroTasks(updatedMicrotasks);
     }
 
+    const enqueueMacroTasksHandler = async () => {
+      if (isMobile) {
+        isAutoPlay && await delay(DELAY_TIME);
+        macroTaskQueueComponentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        macroTaskQueueComponentRef.current?.focus();
+        isAutoPlay && await delay(DELAY_TIME);
+      }      
+      console.log('Payloads', payloads)
+      payloads?.forEach(({ funcId, name }) => {
+        const macroTask = {
+          id: funcId,
+          name: name,
+        };
+        setMacroTasks((prev) => [...prev, macroTask]);
+      })
+    }
+
+    // @deprecated
     const enqueueMacrotaskHandler = async () => {
       if (isMobile) {
         isAutoPlay && await delay(DELAY_TIME);
@@ -334,8 +371,8 @@ function App() {
         isAutoPlay && await delay(DELAY_TIME);
       }      
       const macroTask = {
-        id: funcId,
-        name: name,
+        id: payload.funcId,
+        name: payload.name,
       };
       setMacroTasks((prev) => [...prev, macroTask]);
     }
@@ -347,7 +384,7 @@ function App() {
         macroTaskQueueComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }      
-      const id = funcId;
+      const id = payload.funcId;
       const updatedMacrotasks = macroTasks?.filter(
         (microTask) => microTask.id !== id
       );
@@ -361,7 +398,7 @@ function App() {
         terminalComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }
-      setOutputs((prev) => [...prev, message]);
+      setOutputs((prev) => [...prev, payload.message]);
     }
 
     const eventLoopHandler = async (isCompleted: boolean = false) => {
@@ -394,7 +431,8 @@ function App() {
     
     const {
       type,
-      payload: { start, message, end, name, funcId },
+      payload,
+      payloads,
       metrics
     } = next.value;
     console.log("onPlayNextEvent: ", next.value);
@@ -408,11 +446,13 @@ function App() {
         break;
       case "ErrorFunction":
         break;
+      case "BeforeCallFunction": 
       case "EnterFunction": {
 
         enterFunctionHandler();  
         break;
       }
+      case "AfterCallFunction":
       case "ExitFunction": {
         exitFunctionHandler();
         break;
@@ -421,12 +461,21 @@ function App() {
         enqueueMicrotaskHandler();
         break;
       }
+      case "EnqueueMicrotasks": {
+        enqueueMicrotasksHandler();
+        break;
+      }
       case "DequeueMicrotask": {
         dequeueMicrotaskHandler();
         break;
       }
       case "EnqueueTask": {
         enqueueMacrotaskHandler();
+        break;
+      }
+
+      case "EnqueueTasks": {
+        enqueueMacroTasksHandler();
         break;
       }
       case "DequeueTask": {
@@ -460,7 +509,7 @@ function App() {
       case "UncaughtError": {
         toaster.create({
           title: `${type}`,
-          description: `${funcId}`,
+          description: `${payload.funcId}`,
           type: 'error',
           duration: 3000
         });

@@ -1,6 +1,7 @@
 export interface EventResponse {
   type: string;
   payload: EventPayload;
+  payloads?: [EventPayload];
   metrics: EventMetrics;
 }
 
@@ -27,6 +28,7 @@ export interface EventMetrics {
 export interface Event {
   type: string;
   payload: EventPayload;
+  payloads?: [EventPayload];
   metrics: EventMetrics;
 }
 
