@@ -2,7 +2,7 @@
 
 ![Demo of the Node-Event-Loop](client/event-loop-visualizer3.gif)
 
-Try it out! [Node-Event-Loop](https://vagostep.github.io/Node-EventLoop-Visualizer/)
+Try it out! [Node-Event-Loop](https://nodeloops.com)
 
 This Node.js Event Loop Visualizer shows the phases that an Event Loop makes when executing Javascript code in Node.js Runtime. The server captures the traces at runtime and then, it returns them to the visualizer.
 
