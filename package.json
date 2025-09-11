@@ -1,5 +1,5 @@
 {
-  "homepage": "https://vagostep.github.io/Node-EventLoop-Visualizer",
+  "homepage": "https://nodeloops.com",
   "version": "1.1.19",
   "devDependencies": {
     "gh-pages": "^6.3.0"

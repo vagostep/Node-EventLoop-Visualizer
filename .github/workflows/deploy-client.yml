@@ -21,7 +21,7 @@ jobs:
     env:  # 👈 Aquí defines tus variables de entorno
       VITE_ENVIRONMENT: "production"
       VITE_API_URL: "https://node-eventloop-visualizer-server.onrender.com"
-      VITE_BASE_URL: "/Node-EventLoop-Visualizer"
+      VITE_BASE_URL: "/"
 
     steps:
       - name: Checkout code
