@@ -44,7 +44,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
       : { opacity: 0, y: -200 };
   const exit =
     isHorizontal
-      ? { opacity: 0, x: 200 }
+      ? { opacity: 0, x: -200 }
       : { opacity: 0, y: -200 };
   const animate =
     isHorizontal ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 };
@@ -108,6 +108,7 @@ const QueueStack: React.FC<QueueStackProps> = ({
             overflowX="hidden"
             overflowY="auto"
             scrollBehavior="smooth"
+            wrap="nowrap"
             ref={scrollComponentRef}
             css={{
               scrollbarWidth: "none", // Firefox
@@ -116,15 +117,17 @@ const QueueStack: React.FC<QueueStackProps> = ({
               },
             }}
           >
-            <AnimatePresence>
-              {frames?.map(({ name }, index) => {
+            <AnimatePresence mode="popLayout">
+              {frames?.map(({ name, id }, index) => {
+                console.log(id)
                 return (
                   <MotionBox
-                    key={index}
+                    key={id}
                     width={width}
+                    layout={orientation === "horizontal"}
                     minWidth="120px"
                     height={{ base: "35px", lg: "40px" }}
-                    bg={getPastelForIndex(index)}
+                    bg={isHorizontal ? "#AFF8D8" : getPastelForIndex(index)}
                     borderRadius="4px"
                     shadow="sm"
                     color="black"

@@ -63,6 +63,9 @@ const before = (asyncId) => {
   const resource = asyncResources.get(asyncId)?.resource || {};
   const resourceName = resource?.constructor?.name;
   // debug('[log] - before - resourceName: ', resourceName, ', name: ', resource?.callback?.name);
+  if (resourceName === 'PBKDF2Job') {
+    postEvent(Events.BeforeMacrotask(asyncId));
+  }
   if (resourceName === 'Promise') {
     postEvent(Events.BeforeMicrotask(asyncId));
   }

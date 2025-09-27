@@ -10,6 +10,10 @@ const Events = {
   ConsoleWarn: (message) => event('ConsoleWarn', { message }),
   ConsoleError: (message) => event('ConsoleError', { message }),
 
+  beforeCallFunction: (funcID, name, start, end) =>
+    event('BeforeCallFunction', { funcID, name, start, end }),
+  afterCallFunction: (funcID, name, start, end) =>
+    event('AfterCallFunction', { funcID, name, start, end }),
   EnterFunction: (funcID, name, start, end) =>
     event('EnterFunction', { funcID, name, start, end }),
   ExitFunction: (funcID, name, start, end) =>
@@ -74,6 +78,10 @@ const postEvent = (event) => {
 };
 
 const Tracer = {
+  beforeCallFunc: (id, name, start, end) =>
+    postEvent(Events.beforeCallFunction(id, name, start, end)),
+  afterCallFunc: (id, name, start, end) =>
+    postEvent(Events.afterCallFunction(id, name, start, end)),
   enterFunc: (id, name, start, end) =>
     postEvent(Events.EnterFunction(id, name, start, end)),
   exitFunc: (id, name, start, end) =>

@@ -9,6 +9,8 @@ const vm = require("node:vm");
 const t = require("@babel/types");
 const EventEmitterBase = require("node:events");
 const { Readable: ReadableBase } = require("node:stream");
+const fetch = require("node-fetch");
+const crypto = require("crypto");
 
 class MyOwnEvent {
   constructor() {
@@ -25,7 +27,6 @@ class MyOwnEvent {
   }
 }
 
-const fetch = require("node-fetch");
 
 // Custom Babel Plugin
 const { traceLoops } = require("./babelPlugin/loopTracer");
@@ -171,6 +172,19 @@ const context = {
 
       return server;
     },
+  },
+  crypto: {
+    pbkdf2: (text, callback) => {
+      
+      const salt = crypto.randomBytes(16);
+
+      const callbackProxy = (err, derivedKey) => {
+        if (!err) {
+          callback(derivedKey);
+        }
+      }
+      return crypto.pbkdf2(text, salt, 100000, 64, "sha512", callbackProxy);
+    }
   },
   fetch,
   JSON,
