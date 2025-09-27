@@ -11,7 +11,8 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://vagostep.github.io",
+    "https://nodeloops.com",
+    "https://www.nodeloops.com"
   ],
   methods: ["POST"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -71,7 +72,7 @@ function processRequest(req) {
               const regexType =
                 /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:;\s*)?)+)/;
               const typeMatch = line.match(regexType);
-              
+              console.log(line)
               if (typeMatch) {
                 let message, type, name, funcId, start, end, loopCount, loopEvents, loopEventsWaiting;
 
@@ -138,6 +139,8 @@ function processRequest(req) {
       activeChildProcess.on("close", () => {
         const reducedEvents = reduceEvents(stdOutput);
 
+        /*
+        // adding main function call
         reducedEvents.unshift({
           payload: {
             message: undefined,
@@ -160,9 +163,17 @@ function processRequest(req) {
           },
           type: "ExitFunction",
         });
+        */
 
         // console.log("events: ", reducedEvents.map(JSON.stringify));        
-        const finalEvents = reduceEventLoopCycles(reduceTicksAndRejectionsNonTriggeredByCallbackCycles(reducedEvents));
+        const finalEvents = 
+        reduceEnqueueMicrotasks(
+          reduceEnqueueTasks(
+            reduceEventLoopCycles(
+              reduceTicksAndRejectionsNonTriggeredByCallbackCycles(reducedEvents)
+            )
+          )
+        );
         resolve(finalEvents);
       });
     } else {
@@ -220,7 +231,6 @@ const reduceEventLoopCycles = (reduceEvents) => {
   const finalEvents = [];
   const targetSequence = [
     "EventLoopPoll",
-    "EventLoopPendingCallbacks",
     "EventLoopCheck",
     "EventLoopCloseCallbacks",
     "EventLoopTimers",
@@ -231,12 +241,13 @@ const reduceEventLoopCycles = (reduceEvents) => {
   const allowedCycles = 1;
   let completeCycles = 0;
   let i = 0;
+  const numberOfPhases = targetSequence.length;
   while (i < reduceEvents.length) {
-    const slice = reduceEvents.slice(i, i + 7);
+    const slice = reduceEvents.slice(i, i + numberOfPhases);
     const events = slice.map((obj) => obj.type);
     if (events.join() === targetSequence.join()) {
       if (completeCycles >= allowedCycles) {
-        i += 7;
+        i += numberOfPhases;
         continue;
       }
       finalEvents.push(...slice);
@@ -251,3 +262,91 @@ const reduceEventLoopCycles = (reduceEvents) => {
 
   return finalEvents;
 }
+
+const reduceEnqueueTasks = (reduceEvents => {
+
+  const BOUNDARY_TYPES = new Set([
+    "EventLoopPoll",
+    "EventLoopPendingCallbacks",
+    "EventLoopCheck",
+    "EventLoopCloseCallbacks",
+    "EventLoopTimers",
+    "EventLoopIdlePrepare"
+  ]);
+
+  let prevBoundary = -1;
+  const toDelete = new Set();
+
+  function processSegment(start, end) {
+    if (start < 0 || end < start) return;
+    const enqueueIdxs = [];
+    for (let k = start; k <= end; k++) {
+      if (reduceEvents[k]?.type === "EnqueueTask") enqueueIdxs.push(k);
+    }
+    if (enqueueIdxs.length > 0) {
+      const payloads = enqueueIdxs.map(idx => reduceEvents[idx].payload);
+      const first = enqueueIdxs[0];
+      // Reemplaza el primer EnqueueTask por EnqueueTasks con todos los payloads
+      reduceEvents[first] = { type: "EnqueueTasks", payloads: payloads };
+      // Elimina los EnqueueTask restantes del segmento
+      for (let m = 1; m < enqueueIdxs.length; m++) toDelete.add(enqueueIdxs[m]);
+    }
+  }
+
+  // Recorremos y procesamos segmentos entre límites
+  for (let i = 0; i < reduceEvents.length; i++) {
+    if (BOUNDARY_TYPES.has(reduceEvents[i].type)) {
+      if (prevBoundary >= 0) processSegment(prevBoundary + 1, i - 1);
+      prevBoundary = i;
+    }
+  }
+
+  // 🔚 También procesamos el segmento final (desde el último límite hasta el final del array)
+  if (prevBoundary >= 0) processSegment(prevBoundary + 1, reduceEvents.length - 1);
+
+  // Devolvemos filtrando los EnqueueTask marcados para eliminar
+  return reduceEvents.filter((_, idx) => !toDelete.has(idx));
+  
+});
+
+const reduceEnqueueMicrotasks = (reduceEvents => {
+
+  const BOUNDARY_TYPES = new Set([
+    "TicksAndRejectionsNextTick",
+    "TicksAndRejectionsMicroTasks"
+  ]);
+
+  let prevBoundary = -1;
+  const toDelete = new Set();
+
+  function processSegment(start, end) {
+    if (start < 0 || end < start) return;
+    const enqueueIdxs = [];
+    for (let k = start; k <= end; k++) {
+      if (reduceEvents[k]?.type === "EnqueueMicrotask") enqueueIdxs.push(k);
+    }
+    if (enqueueIdxs.length > 0) {
+      const payloads = enqueueIdxs.map(idx => reduceEvents[idx].payload);
+      const first = enqueueIdxs[0];
+      // Reemplaza el primer EnqueueTask por EnqueueTasks con todos los payloads
+      reduceEvents[first] = { type: "EnqueueMicrotasks", payloads: payloads };
+      // Elimina los EnqueueTask restantes del segmento
+      for (let m = 1; m < enqueueIdxs.length; m++) toDelete.add(enqueueIdxs[m]);
+    }
+  }
+
+  // Recorremos y procesamos segmentos entre límites
+  for (let i = 0; i < reduceEvents.length; i++) {
+    if (BOUNDARY_TYPES.has(reduceEvents[i].type)) {
+      if (prevBoundary >= 0) processSegment(prevBoundary + 1, i - 1);
+      prevBoundary = i;
+    }
+  }
+
+  // 🔚 También procesamos el segmento final (desde el último límite hasta el final del array)
+  if (prevBoundary >= 0) processSegment(prevBoundary + 1, reduceEvents.length - 1);
+
+  // Devolvemos filtrando los EnqueueTask marcados para eliminar
+  return reduceEvents.filter((_, idx) => !toDelete.has(idx));
+  
+});

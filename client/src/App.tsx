@@ -273,7 +273,7 @@ function App() {
         callStackComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }      
-      setCallStack((prev) => [...prev, { name: payload.name }]);
+      setCallStack((prev) => [...prev, { name: payload.name, id: payload.funcId }]);
 
       setMarkers((prev) => [...prev, { start: payload.start, end: payload.end }]);
     }
@@ -306,14 +306,14 @@ function App() {
         isAutoPlay && await delay(DELAY_TIME);
       }      
 
-      console.log('Payloads', payloads)
-      payloads?.forEach(({ funcId, name }) => {
+      const microTasks = payloads?.map(({ funcId, name }) => {
         const microTask = {
           id: funcId,
           name: name,
         };
-        setMicroTasks((prev) => [...prev, microTask]);
-      })
+        return microTask;
+      }) || [];
+      setMicroTasks((prev) => [...prev, ...microTasks]);
     }
 
     // @deprecated
@@ -338,11 +338,8 @@ function App() {
         microTaskQueueComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }      
-      const id = payload.funcId;
-      const updatedMicrotasks = microTasks?.filter(
-        (microTask) => microTask.id !== id
-      );
-      setMicroTasks(updatedMicrotasks);
+
+  setMicroTasks((prev) => prev ? prev.slice(1) : prev);
     }
 
     const enqueueMacroTasksHandler = async () => {
@@ -352,14 +349,15 @@ function App() {
         macroTaskQueueComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }      
-      console.log('Payloads', payloads)
-      payloads?.forEach(({ funcId, name }) => {
+
+      const macroTasks = payloads?.map(({ funcId, name }) => {
         const macroTask = {
           id: funcId,
           name: name,
         };
-        setMacroTasks((prev) => [...prev, macroTask]);
-      })
+        return macroTask;
+      }) || [];
+      setMacroTasks((prev) => [...prev, ...macroTasks]);
     }
 
     // @deprecated
@@ -374,6 +372,7 @@ function App() {
         id: payload.funcId,
         name: payload.name,
       };
+      
       setMacroTasks((prev) => [...prev, macroTask]);
     }
 
@@ -384,11 +383,8 @@ function App() {
         macroTaskQueueComponentRef.current?.focus();
         isAutoPlay && await delay(DELAY_TIME);
       }      
-      const id = payload.funcId;
-      const updatedMacrotasks = macroTasks?.filter(
-        (microTask) => microTask.id !== id
-      );
-      setMacroTasks(updatedMacrotasks);
+  
+      setMacroTasks(prev => (prev.length ? prev.slice(1): prev));
     }
 
     const consoleHandler = async () => {

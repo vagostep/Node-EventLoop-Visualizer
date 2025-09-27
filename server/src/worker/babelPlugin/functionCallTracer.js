@@ -58,14 +58,14 @@ const traceFuncCall = (babel) => {
         }
         // Make Tracer Function to instrument
         const tracerEnter = makeTracerFunc(
-          "enterFunc",
+          "beforeCallFunc",
           nextId,
           fnName,
           start,
           end
         );
         const tracerExit = makeTracerFunc(
-          "exitFunc",
+          "afterCallFunc",
           nextId,
           fnName,
           start,

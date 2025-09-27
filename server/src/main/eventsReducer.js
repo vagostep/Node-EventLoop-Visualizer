@@ -13,7 +13,8 @@ const eventsReducer = (state, evt) => {
   if (type === 'ConsoleLog') state.events.push(evt);
   if (type === 'ConsoleWarn') state.events.push(evt);
   if (type === 'ConsoleError') state.events.push(evt);
-
+  if (type === 'BeforeCallFunction') state.events.push(evt);
+  if (type === 'AfterCallFunction') state.events.push(evt)
   if (type === 'EnterFunction') {
     // console.log('[log] ', state?.prevEvt?.type)
     if (state?.prevEvt?.type === 'InitPromise') {

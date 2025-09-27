@@ -8,7 +8,7 @@ export interface BrandingProps {
 
 const Branding: React.FC<BrandingProps> = ({ ref }) => {
 
-  const imageUrl = useColorModeValue(`${import.meta.env.VITE_BASE_URL}/dark.svg`, `${import.meta.env.VITE_BASE_URL}/light.svg`)
+  const imageUrl = useColorModeValue(`/dark.svg`, `/light.svg`)
   const fontColor = useColorModeValue('#000000', '#ffffff');
 
   return (
