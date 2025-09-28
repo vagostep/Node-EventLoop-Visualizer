@@ -6,7 +6,9 @@
     "dev": "vite --mode development",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d ./dist --cname nodeloops.com",
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.18.0",
@@ -36,6 +38,7 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "gh-pages": "^6.3.0"
   }
 }
