@@ -1,4 +1,25 @@
-FROM node:22
+FROM ubuntu:24.04
+
+# Evita errores interactivos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instala dependencias del sistema y Node.js oficial
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    gnupg \
+    build-essential \
+    libssl-dev \
+    libstdc++6 \
+    libgcc-s1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instala Node.js oficial (desde NodeSource)
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+    && apt-get install -y nodejs
+
+# Verifica Node.js instalado por apt
+RUN node -v && which node
 
 WORKDIR /app 
 

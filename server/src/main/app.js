@@ -47,13 +47,14 @@ const getTransformedMessageLine = (text) => {
 function processRequest(req) {
 
   return new Promise((resolve, reject) => {
-    const { type, payload } = req?.body;
+    const { type, payload, module } = req?.body;
     if (type === Messages.RunCode) {
       let events = [];
       let stdOutput = [];
+      let fileExtension = module === "commonjs" ? "js" : "mjs";
 
       const activeChildProcess = spawn(nodePath, [
-        `${path.join(__dirname, "../worker")}/worker.js`,
+        `${path.join(__dirname, "../worker")}/worker.${fileExtension}`,
         JSON.stringify(payload),
       ]);
 
@@ -72,7 +73,7 @@ function processRequest(req) {
               const regexType =
                 /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:;\s*)?)+)/;
               const typeMatch = line.match(regexType);
-              console.log(line)
+              // console.log(line)
               if (typeMatch) {
                 let message, type, name, funcId, start, end, loopCount, loopEvents, loopEventsWaiting;
 
@@ -167,13 +168,13 @@ function processRequest(req) {
 
         // console.log("events: ", reducedEvents.map(JSON.stringify));        
         const finalEvents = 
-        reduceEnqueueMicrotasks(
+        // reduceEnqueueMicrotasks(
           reduceEnqueueTasks(
             reduceEventLoopCycles(
               reduceTicksAndRejectionsNonTriggeredByCallbackCycles(reducedEvents)
             )
           )
-        );
+        // );
         resolve(finalEvents);
       });
     } else {

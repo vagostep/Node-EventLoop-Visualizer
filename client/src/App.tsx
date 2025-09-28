@@ -8,29 +8,24 @@ import Attributions from "@components/Attributions";
 import ActionButtons from "@components/ActionButtons";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { API_URL, COMMANDS, defaultCode, DELAY_TIME } from "./constants";
-import {
-  EventRequest,
-  EventResponse,
-  Event,
-  Marker,
-  EventMetrics,
-} from "./interfaces";
-import WelcomeDialog from "@components/WelcomeDialog";
-import CallStackAboutDialog from "@components/CallStackAboutDialog";
-import MicroTaskQueueAboutDialog from "@components/MicroTaskQueueAboutDialog";
-import MacroTaskQueueAboutDialog from "@components/MacroTaskQueueAboutDialog";
-import EventLoopStepperAboutDialog from "@components/EventLoopStepperAboutDialog";
-import TicksAndRejectionsLoopStepperAboutDialog from "@components/TicksAndRejectionsLoopStepperAboutDialog";
+import { API_URL, COMMANDS, defaultCode, DELAY_TIME, MODULETYPES } from './constants';
+import { EventRequest, EventResponse, Event, Marker, EventMetrics } from './interfaces';
+import WelcomeDialog from '@components/WelcomeDialog';
+import CallStackAboutDialog from '@components/CallStackAboutDialog';
+import MicroTaskQueueAboutDialog from '@components/MicroTaskQueueAboutDialog';
+import MacroTaskQueueAboutDialog from '@components/MacroTaskQueueAboutDialog';
+import EventLoopStepperAboutDialog from '@components/EventLoopStepperAboutDialog';
+import TicksAndRejectionsLoopStepperAboutDialog from '@components/TicksAndRejectionsLoopStepperAboutDialog';
 import { Toaster, toaster } from "@components/ui/toaster";
-import Branding from "@components/Branding";
-import ExampleController from "@components/ExampleController";
-import Metrics from "@components/Metrics";
-import { delay } from "@utils/delay";
-import MetricsAboutDialog from "@components/MetricsAboutDialog";
-import GithubCorner from "@components/GithubCorner";
-import ColorModeCorner from "@components/ColorModeCorner";
-import { useColorMode, useColorModeValue } from "@components/ui/color-mode";
+import Branding from '@components/Branding';
+import ExampleController from '@components/ExampleController';
+import Metrics from '@components/Metrics';
+import { delay } from '@utils/delay';
+import MetricsAboutDialog from '@components/MetricsAboutDialog';
+import GithubCorner from '@components/GithubCorner';
+import ColorModeCorner from '@components/ColorModeCorner';
+import { useColorMode, useColorModeValue } from '@components/ui/color-mode';
+import ModuleTypeCheck, { CheckedChangeDetails } from '@components/ModuleTypeCheck';
 
 const eventLoopSteps: Array<Step> = [
   {
@@ -142,6 +137,7 @@ function App() {
   const brandingComponentRef = useRef<HTMLDivElement>(null);
 
   const [code, setCode] = useState(defaultCode);
+  const [moduleType, setModuleType] = useState<string>(MODULETYPES.COMMONJS);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditMode, setIsEditMode] = useState(true);
   const [isAutoPlay, setIsAutoPlay] = useState(false);
@@ -211,9 +207,17 @@ function App() {
     setCode(newCode);
   };
 
+  const onChangeModuleType = (type: string) => {
+    setModuleType(type);
+  }
+
   const onExampleSelectorValueChange = (code: string | undefined) => {
     onChangeCode(code || "");
   };
+
+  const onModuleTypeCheckValueChange = (details: CheckedChangeDetails)  => {
+    onChangeModuleType(details?.checked ? MODULETYPES.ESM : MODULETYPES.COMMONJS);
+  }
 
   const onButtonEditClick = () => {
     resetState();
@@ -246,11 +250,8 @@ function App() {
     try {
       setIsLoading(true);
       setIsEditMode(false);
-      const body = { type: COMMANDS.RUN_CODE, payload: code } as EventRequest;
-      const { data } = await axios.post<Array<EventResponse>>(
-        `${API_URL}/execute-code`,
-        body
-      );
+      const body = { type: COMMANDS.RUN_CODE, payload: code, module: moduleType } as EventRequest;
+      const { data } = await axios.post<Array<EventResponse>>(`${API_URL}/execute-code`, body);
       console.log(data);
       const iterator = eventsIterator(data);
       setEvents(iterator);
@@ -672,8 +673,8 @@ function App() {
         )}
         <Toaster />
         <Grid templateColumns={{ base: "1fr", lg: "35% 65%" }} height="100%">
-          <Grid
-            templateRows={{ base: "8% 5% 5% 50% 32%", lg: "6% 4% 5% 50% 35%" }}
+          <Grid 
+            templateRows={{ base: "8% 5% 5% 5% 45% 32%", lg: "6% 4% 6% 4% 45% 35%" }}
             height={{ base: "800px", lg: "100%" }}
             width="100%"
           >
@@ -690,6 +691,13 @@ function App() {
                 isLoading={isLoading}
                 onButtonEditClick={onButtonEditClick}
                 onButtonRunClick={onButtonRunClick}
+              />
+            </Box>
+            <Box padding="8px" backgroundColor={backgroundColor}>
+              <ModuleTypeCheck
+                onValueChange={onModuleTypeCheckValueChange}
+                isEditMode={isEditMode}
+                isLoading={isLoading}
               />
             </Box>
             <Box padding="8px" backgroundColor={backgroundColor}>
