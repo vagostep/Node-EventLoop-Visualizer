@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
+    "dev:expose": "vite --mode development --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -17,6 +17,6 @@ export enum UI_QUEUE_SIZES {
 }
 
 export enum MODULETYPES {
-  COMMONJS = "commonjs",
-  ESM = "esm"
+  COMMONJS = "CommonJs",
+  ESM = "ESModule"
 }

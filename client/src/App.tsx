@@ -25,7 +25,7 @@ import MetricsAboutDialog from '@components/MetricsAboutDialog';
 import GithubCorner from '@components/GithubCorner';
 import ColorModeCorner from '@components/ColorModeCorner';
 import { useColorMode, useColorModeValue } from '@components/ui/color-mode';
-import ModuleTypeCheck, { CheckedChangeDetails } from '@components/ModuleTypeCheck';
+import ModuleTypeRadio, { ValueChangeDetails } from '@components/ModuleTypeRadio';
 
 const eventLoopSteps: Array<Step> = [
   {
@@ -215,8 +215,8 @@ function App() {
     onChangeCode(code || "");
   };
 
-  const onModuleTypeCheckValueChange = (details: CheckedChangeDetails)  => {
-    onChangeModuleType(details?.checked ? MODULETYPES.ESM : MODULETYPES.COMMONJS);
+  const onModuleTypeRadioValueChange = (details: ValueChangeDetails)  => {
+    onChangeModuleType(details?.value || '');
   }
 
   const onButtonEditClick = () => {
@@ -674,7 +674,7 @@ function App() {
         <Toaster />
         <Grid templateColumns={{ base: "1fr", lg: "35% 65%" }} height="100%">
           <Grid 
-            templateRows={{ base: "8% 5% 5% 5% 45% 32%", lg: "6% 4% 6% 4% 45% 35%" }}
+            templateRows={{ base: "8% 5% 5% 8% 42% 32%", lg: "6% 4% 6% 8% 45% 31%" }}
             height={{ base: "800px", lg: "100%" }}
             width="100%"
           >
@@ -694,8 +694,8 @@ function App() {
               />
             </Box>
             <Box padding="8px" backgroundColor={backgroundColor}>
-              <ModuleTypeCheck
-                onValueChange={onModuleTypeCheckValueChange}
+              <ModuleTypeRadio
+                onValueChange={onModuleTypeRadioValueChange}
                 isEditMode={isEditMode}
                 isLoading={isLoading}
               />
@@ -754,6 +754,7 @@ function App() {
                   padding="8px"
                   maxHeight={{ base: "114px", lg: "none" }}
                   backgroundColor={backgroundColor}
+                  overflowX="auto"
                 >
                   <QueueStack
                     ref={microTaskQueueComponentRef}

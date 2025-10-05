@@ -51,9 +51,8 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
     resource.callback?.name !== "resume_" &&
     resource.callback?.name !== "bound"
   ) {
-    const callbackName = resource?.callback?.name || 'microtask';
-    // debug('TickObject: ', callbackName);
-    // postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
+    const callbackName = resource?.callback?.name || 'anonymous';
+    postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
   }
 
   asyncResources.set(asyncId, { resource, asyncResourceType });
@@ -94,6 +93,7 @@ const before = (asyncId) => {
     resource.callback?.name !== "bound"
   ) {
     const callbackName = resource.callback?.name || "anonymous";
+    console.log('asyncId', asyncId)
     postEvent(Events.BeforeMicrotask(asyncId, callbackName));
   }
   if (resourceName === 'AsyncResource') {

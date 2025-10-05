@@ -30,8 +30,9 @@ const Events = {
   // TickObject: (asyncID, parentId, callbackName) =>
   //   event('TickObject', { asyncID, parentId, callbackName }),
 
-  InitMicrotask: (asyncID, parentId, name) =>
-    event('InitMicrotask', { asyncID, parentId, name }),
+  InitMicrotask: (asyncID, parentId, name) => {
+    return event('InitMicrotask', { asyncID, parentId, name });
+  },
   BeforeMicrotask: (asyncID, name) => {
     return event('BeforeMicrotask', { asyncID, name });
   },
@@ -73,7 +74,7 @@ const postEvent = (event) => {
   if (payload?.message) {
     console.log(`[event] Type: '${type}'; Message: '${payload?.message?.trim()?.replace(/\n/g, '')}'`);
   } else {
-    console.log(`[event] Type: '${type}'; FuncID: '${payload?.funcID}'; Name: '${payload?.name}'; Start: '${payload?.start}'; End: '${payload?.end}'`);
+    console.log(`[event] Type: '${type}'; FuncID: '${payload?.funcID}'; Name: '${payload?.name}'; Start: '${payload?.start}'; End: '${payload?.end}'; AsyncID: '${payload?.asyncID}'`);
   }
 };
 

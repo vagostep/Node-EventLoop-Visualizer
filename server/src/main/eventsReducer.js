@@ -5,8 +5,7 @@ function debug(...args) {
 }
 const eventsReducer = (state, evt) => {
   const { type, payload } = evt;
-  // console.log('type: ', type)
-  // console.log('payload: ', payload)
+
   if (type === 'EarlyTermination') state.events.push(evt);
   if (type === 'UncaughtError') state.events.push(evt);
 
@@ -22,8 +21,8 @@ const eventsReducer = (state, evt) => {
       state.events.push({ type: 'DequeueMicrotask', payload: evt.payload });
       state.events.push(evt);
     } else if (state?.prevEvt?.type === 'BeforeMicrotask') {
-      state.events.push({ type: 'EnqueueMicrotask', payload: evt.payload });
-      state.events.push({ type: 'DequeueMicrotask', payload: evt.payload });
+      state.events.push({ type: 'EnqueueMicrotask', payload: { ...evt.payload, asyncID: state?.prevEvt?.payload?.asyncID } });
+      state.events.push({ type: 'DequeueMicrotask', payload: { ...evt.payload, asyncID: state?.prevEvt?.payload?.asyncID } });
       state.events.push(evt);
     } else if(state?.prevEvt?.type === 'BeforeTicktask') {
       state.events.push({ type: 'EnqueueTicktask', payload: evt.payload });
@@ -46,7 +45,6 @@ const eventsReducer = (state, evt) => {
     state.events.push({ type: 'DequeueMicrotask', payload: evt.payload });
   }*/
   if (type === 'ResolvePromise') {
-    console.log('ResolvePromise')
     // state.events.push(evt);
 
     // const microtaskInfo = state.parentsIdsOfPromisesWithInvokedCallbacks.find(
@@ -82,6 +80,14 @@ const eventsReducer = (state, evt) => {
     // state.events.push({ type: 'EnqueueTask', payload: evt.payload });
     // state.events.push(evt);
     // state.events.push({ type: 'DequeueTask', payload: evt.payload });
+  }
+
+  if (type === 'InitMicrotask') {
+    state.events.push(evt);
+  }
+
+  if (type === 'InitPromise') {
+    state.events.push(evt);
   }
 
   if (
