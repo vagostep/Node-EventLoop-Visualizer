@@ -4,6 +4,7 @@ const { spawn } = require("node:child_process");
 const { Transform } = require("node:stream");
 const express = require('express');
 const cors = require("cors");
+const fs = require("node:fs");
 
 const app = express();
 app.use(express.json()); 
@@ -47,13 +48,14 @@ const getTransformedMessageLine = (text) => {
 function processRequest(req) {
 
   return new Promise((resolve, reject) => {
-    const { type, payload } = req?.body;
+    const { type, payload, module } = req?.body;
     if (type === Messages.RunCode) {
       let events = [];
       let stdOutput = [];
+      let fileExtension = module === "CommonJs" ? "js" : "mjs";
 
       const activeChildProcess = spawn(nodePath, [
-        `${path.join(__dirname, "../worker")}/worker.js`,
+        `${path.join(__dirname, "../worker")}/worker.${fileExtension}`,
         JSON.stringify(payload),
       ]);
 
@@ -72,9 +74,9 @@ function processRequest(req) {
               const regexType =
                 /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:;\s*)?)+)/;
               const typeMatch = line.match(regexType);
-              console.log(line)
+              // console.log(line)
               if (typeMatch) {
-                let message, type, name, funcId, start, end, loopCount, loopEvents, loopEventsWaiting;
+                let message, type, name, funcId, asyncID, start, end, loopCount, loopEvents, loopEventsWaiting;
 
                 let source = typeMatch[1];
                 const match = typeMatch[2]?.trim()?.split(";");
@@ -89,6 +91,7 @@ function processRequest(req) {
                     message = getTransformedMessageConsoleLine(match[1]);
                   } else {
                     funcId = getTransformedMessageLine(match[1]);
+                    asyncID = getTransformedMessageLine(match[5]);
                   }
                   name = getTransformedMessageLine(match[2]);
                   start = getTransformedMessageLine(match[3]);
@@ -113,6 +116,7 @@ function processRequest(req) {
                     funcId: funcId,
                     start: start,
                     end: end,
+                    asyncID: asyncID
                   },
                   metrics: {
                     loopCount,
@@ -167,7 +171,7 @@ function processRequest(req) {
 
         // console.log("events: ", reducedEvents.map(JSON.stringify));        
         const finalEvents = 
-        reduceEnqueueMicrotasks(
+        reduceMicrotasksAndPromises(
           reduceEnqueueTasks(
             reduceEventLoopCycles(
               reduceTicksAndRejectionsNonTriggeredByCallbackCycles(reducedEvents)
@@ -309,44 +313,120 @@ const reduceEnqueueTasks = (reduceEvents => {
   
 });
 
-const reduceEnqueueMicrotasks = (reduceEvents => {
+function reduceMicrotasksAndPromises(reduceEvents) {
+  function processBlock({
+    input,
+    startBoundary,
+    endBoundary,
+    initType,
+    enqueueType,
+    combinedType
+  }) {
+    let result = [...input];
+    let boundaries = [];
 
-  const BOUNDARY_TYPES = new Set([
-    "TicksAndRejectionsNextTick",
-    "TicksAndRejectionsMicroTasks"
-  ]);
-
-  let prevBoundary = -1;
-  const toDelete = new Set();
-
-  function processSegment(start, end) {
-    if (start < 0 || end < start) return;
-    const enqueueIdxs = [];
-    for (let k = start; k <= end; k++) {
-      if (reduceEvents[k]?.type === "EnqueueMicrotask") enqueueIdxs.push(k);
+    // Buscar todos los pares de boundaries
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].type === startBoundary) {
+        for (let j = i + 1; j < result.length; j++) {
+          if (result[j].type === endBoundary) {
+            boundaries.push([i, j]);
+            i = j; // Avanzar i para no encontrar solapamientos
+            break;
+          }
+        }
+      }
     }
-    if (enqueueIdxs.length > 0) {
-      const payloads = enqueueIdxs.map(idx => reduceEvents[idx].payload);
-      const first = enqueueIdxs[0];
-      // Reemplaza el primer EnqueueTask por EnqueueTasks con todos los payloads
-      reduceEvents[first] = { type: "EnqueueMicrotasks", payloads: payloads };
-      // Elimina los EnqueueTask restantes del segmento
-      for (let m = 1; m < enqueueIdxs.length; m++) toDelete.add(enqueueIdxs[m]);
+
+    // Procesar bloques de derecha a izquierda para no invalidar los índices
+    for (let b = boundaries.length - 1; b >= 0; b--) {
+      const [startIdx, endIdx] = boundaries[b];
+
+      const before = result.slice(0, startIdx + 1);
+      const block = result.slice(startIdx + 1, endIdx);
+      const after = result.slice(endIdx);
+
+      const toRemoveIndices = new Set();
+
+      // Paso 1: Agrupar Enqueue que NO tienen Init correspondiente
+      const enqueueList = [];
+      const enqueueIndicesToDelete = [];
+      const initAsyncIDs = new Set(
+        block.filter(e => e.type === initType).map(e => e.payload?.asyncID)
+      );
+
+      for (let i = 0; i < block.length; i++) {
+        const item = block[i];
+        if (item.type === enqueueType) {
+          const asyncID = item.payload?.asyncID;
+          if (!initAsyncIDs.has(asyncID)) {
+            enqueueList.push({ idx: i, payload: item.payload });
+            enqueueIndicesToDelete.push(i);
+          }
+        }
+      }
+
+      if (enqueueList.length > 0) {
+        const firstIdx = enqueueList[0].idx;
+
+        const combined = {
+          type: combinedType,
+          payloads: enqueueList.map(e => e.payload),
+        };
+
+        block[firstIdx] = combined;
+
+        enqueueIndicesToDelete.forEach(i => {
+          if (i !== firstIdx) toRemoveIndices.add(i);
+        });
+      }
+
+      // Paso 2: Reemplazar InitX por Enqueue con mismo asyncID
+      for (let i = 0; i < block.length; i++) {
+        const item = block[i];
+        if (item.type === initType) {
+          const asyncID = item.payload?.asyncID;
+          if (!asyncID) continue;
+
+          const matchIdx = block.findIndex((e, j) =>
+            j !== i &&
+            e.type === enqueueType &&
+            e.payload?.asyncID === asyncID
+          );
+
+          if (matchIdx !== -1) {
+            block[i] = block[matchIdx];
+            toRemoveIndices.add(matchIdx);
+          }
+        }
+      }
+
+      const cleanedBlock = block.filter((_, idx) => !toRemoveIndices.has(idx));
+      result = [...before, ...cleanedBlock, ...after];
     }
+
+    return result.filter(e => e.type !== initType);
   }
 
-  // Recorremos y procesamos segmentos entre límites
-  for (let i = 0; i < reduceEvents.length; i++) {
-    if (BOUNDARY_TYPES.has(reduceEvents[i].type)) {
-      if (prevBoundary >= 0) processSegment(prevBoundary + 1, i - 1);
-      prevBoundary = i;
-    }
-  }
+  // Paso 1: Procesar múltiples bloques InitMicrotask
+  const afterMicrotask = processBlock({
+    input: reduceEvents,
+    startBoundary: "TicksAndRejectionsNextTick",
+    endBoundary: "TicksAndRejectionsMicroTasks",
+    initType: "InitMicrotask",
+    enqueueType: "EnqueueMicrotask",
+    combinedType: "EnqueueMicrotasks"
+  });
 
-  // 🔚 También procesamos el segmento final (desde el último límite hasta el final del array)
-  if (prevBoundary >= 0) processSegment(prevBoundary + 1, reduceEvents.length - 1);
+  // Paso 2: Procesar múltiples bloques InitPromise
+  const afterPromise = processBlock({
+    input: afterMicrotask,
+    startBoundary: "TicksAndRejectionsMicroTasks",
+    endBoundary: "TicksAndRejectionsNextTick",
+    initType: "InitPromise",
+    enqueueType: "EnqueueMicrotask",
+    combinedType: "EnqueueMicrotasks"
+  });
 
-  // Devolvemos filtrando los EnqueueTask marcados para eliminar
-  return reduceEvents.filter((_, idx) => !toDelete.has(idx));
-  
-});
+  return afterPromise;
+}

@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "engines": {
-    "node": ">=16.x"
+    "node": ">=22.x"
   },
   "scripts": {
     "start": "nodemon --ignore temp_files/  index.js",
