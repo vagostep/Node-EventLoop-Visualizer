@@ -128,7 +128,7 @@ function processRequest(req) {
 
                 stdOutput.push(transformedLine);
               } else {
-                console.log(line);
+                // console.log(line);
               }
             });
 
