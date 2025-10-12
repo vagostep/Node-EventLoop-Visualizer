@@ -127,6 +127,8 @@ function processRequest(req) {
                 };
 
                 stdOutput.push(transformedLine);
+              } else {
+                console.log(line);
               }
             });
 
@@ -322,6 +324,8 @@ function reduceMicrotasksAndPromises(reduceEvents) {
     enqueueType,
     combinedType
   }) {
+    const initTypes = Array.isArray(initType) ? initType : [initType];
+
     let result = [...input];
     let boundaries = [];
 
@@ -331,14 +335,14 @@ function reduceMicrotasksAndPromises(reduceEvents) {
         for (let j = i + 1; j < result.length; j++) {
           if (result[j].type === endBoundary) {
             boundaries.push([i, j]);
-            i = j; // Avanzar i para no encontrar solapamientos
+            i = j;
             break;
           }
         }
       }
     }
 
-    // Procesar bloques de derecha a izquierda para no invalidar los índices
+    // Procesar bloques de derecha a izquierda para no invalidar índices
     for (let b = boundaries.length - 1; b >= 0; b--) {
       const [startIdx, endIdx] = boundaries[b];
 
@@ -352,7 +356,9 @@ function reduceMicrotasksAndPromises(reduceEvents) {
       const enqueueList = [];
       const enqueueIndicesToDelete = [];
       const initAsyncIDs = new Set(
-        block.filter(e => e.type === initType).map(e => e.payload?.asyncID)
+        block
+          .filter(e => initTypes.includes(e.type))
+          .map(e => e.payload?.asyncID)
       );
 
       for (let i = 0; i < block.length; i++) {
@@ -384,7 +390,7 @@ function reduceMicrotasksAndPromises(reduceEvents) {
       // Paso 2: Reemplazar InitX por Enqueue con mismo asyncID
       for (let i = 0; i < block.length; i++) {
         const item = block[i];
-        if (item.type === initType) {
+        if (initTypes.includes(item.type)) {
           const asyncID = item.payload?.asyncID;
           if (!asyncID) continue;
 
@@ -405,10 +411,11 @@ function reduceMicrotasksAndPromises(reduceEvents) {
       result = [...before, ...cleanedBlock, ...after];
     }
 
-    return result.filter(e => e.type !== initType);
+    // Ya no eliminamos initTypes aquí
+    return result;
   }
 
-  // Paso 1: Procesar múltiples bloques InitMicrotask
+  // Paso 1: Procesar solo InitMicrotask
   const afterMicrotask = processBlock({
     input: reduceEvents,
     startBoundary: "TicksAndRejectionsNextTick",
@@ -418,15 +425,21 @@ function reduceMicrotasksAndPromises(reduceEvents) {
     combinedType: "EnqueueMicrotasks"
   });
 
-  // Paso 2: Procesar múltiples bloques InitPromise
+  // Paso 2: Procesar InitPromise y InitMicrotask
   const afterPromise = processBlock({
     input: afterMicrotask,
     startBoundary: "TicksAndRejectionsMicroTasks",
     endBoundary: "TicksAndRejectionsNextTick",
-    initType: "InitPromise",
+    initType: ["InitPromise", "InitMicrotask"],
     enqueueType: "EnqueueMicrotask",
     combinedType: "EnqueueMicrotasks"
   });
 
-  return afterPromise;
+  // ✅ Finalmente, eliminamos todos los InitPromise e InitMicrotask
+  const finalResult = afterPromise.filter(
+    e => e.type !== "InitPromise" && e.type !== "InitMicrotask"
+  );
+
+  return finalResult;
 }
+
