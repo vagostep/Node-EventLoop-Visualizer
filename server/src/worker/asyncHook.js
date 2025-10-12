@@ -12,15 +12,15 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
   // debug('[log] init: ', type);
   if (type === 'PROMISE') {
     const parentResource = asyncResources.get(triggerAsyncId);
-    
     asyncResourceType = 'promise';
+    const callbackName = resource.callback?.name || 'anonymous';
+    
     // According to the promiseResolve documentation, a Promise is trigger right after a previous Promise was resolved. So, in order to 
     // only catch the actual callback of the Promise, we need to filter the first Promise triggered.
     if (parentResource?.asyncResourceType === asyncResourceType) {
-      const callbackName = resource.callback?.name || 'anonymous';
       postEvent(Events.InitPromise(asyncId, triggerAsyncId, callbackName));
     }
-    // postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
+    
   }
   if (type === 'Timeout') {
     const callbackName = resource._onTimeout?.name || 'anonymous';
@@ -33,8 +33,8 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
   }
   if (type === 'Microtask') {
     const callbackName = resource.callback?.name || 'anonymous';
-    // debug('Microtask: ', resource);
-    // postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
+    // debug('[log] Microtask: ', asyncId);
+    postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
   }
   if (
     type === 'TickObject' &&
